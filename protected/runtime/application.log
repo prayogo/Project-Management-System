@@ -1,0 +1,8 @@
+2014/07/03 05:30:49 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "login".' in C:\xampp\htdocs\pms\framework\web\CWebApplication.php:286
+Stack trace:
+#0 C:\xampp\htdocs\pms\framework\web\CWebApplication.php(141): CWebApplication->runController('')
+#1 C:\xampp\htdocs\pms\framework\base\CApplication.php(180): CWebApplication->processRequest()
+#2 C:\xampp\htdocs\pms\index.php(13): CApplication->run()
+#3 {main}
+REQUEST_URI=/pms/
+---
