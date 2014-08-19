@@ -18,8 +18,9 @@
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/js/vendor/fastclick.js"></script>
 
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.widget.min.js"></script>
+<!--
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/js/metro.min.js"></script>
-
+-->
 <title><?php echo CHtml::encode($this->pageTitle); ?></title>
 </head>
 <body>
@@ -61,9 +62,9 @@
           <nav>
             <ul class="side-nav">
               <li class="heading"><i class="fi-torsos"></i> User Management <a data-switch="show" data-target="UM" class="SidePanel no-select"><i class="fi-minus"></i></a></li>
-              <li class="UM"><a class="sideItem" href="../um/user"><i class="fi-torso"></i> Users</a></li>
-              <li class="UM"><a class="sideItem" href="../um/menu"><i class="fi-list"></i> Menus</a></li>
-              <li class="UM"><a class="sideItem" href="../um/group"><i class="fi-torsos-all"></i> Groups</a></li>
+              <li class="UM"><a class="sideItem" href="<?php echo Yii::app()->createUrl('um/user') ?>"><i class="fi-torso"></i> Users</a></li>
+              <li class="UM"><a class="sideItem" href="<?php echo Yii::app()->createUrl('um/menu') ?>"><i class="fi-list"></i> Menus</a></li>
+              <li class="UM"><a class="sideItem" href="<?php echo Yii::app()->createUrl('um/group') ?>"><i class="fi-torsos-all"></i> Groups</a></li>
               <!--<li class="UM"><a class="sideItem"><i class="fi-key"></i> Group Access</a></li>
               <li class="UM"><a class="sideItem"><i class="fi-key"></i> User Access</a></li>-->
               <li class="divider"></li>
@@ -121,8 +122,9 @@
 </body>
 </html>
 <script>
+
 	$(document).foundation();
-	
+
 	$('.SidePanel').click(function(e){
 		var target = '.'+$(this).attr('data-target');
 		if ($(this).attr('data-switch') == 'hide'){

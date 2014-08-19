@@ -184,10 +184,18 @@ class CTabView extends CWidget
 		echo "<ul class=\"tabs\">\n";
 		foreach($this->tabs as $id=>$tab)
 		{
+			/* default
 			$title=isset($tab['title'])?$tab['title']:'undefined';
 			$active=$id===$this->activeTab?' class="active"' : '';
 			$url=isset($tab['url'])?$tab['url']:"#{$id}";
 			echo "<li><a href=\"{$url}\"{$active}>{$title}</a></li>\n";
+			*/
+			
+			$title=isset($tab['title'])?$tab['title']:'undefined';
+			$active=$id===$this->activeTab?'active' : '';
+			$url=isset($tab['url'])?$tab['url']:"#{$id}";
+			echo "<li class='tab-title {$active}'><a href=\"{$url}\">{$title}</a></li>\n";
+			
 		}
 		echo "</ul>\n";
 	}
@@ -196,9 +204,11 @@ class CTabView extends CWidget
 	 * Renders the body part.
 	 */
 	protected function renderBody()
-	{
+	{	
+		echo "<div class=\"tabs-content\">\n";//custom
 		foreach($this->tabs as $id=>$tab)
 		{
+			/* default 
 			$inactive=$id!==$this->activeTab?' style="display:none"' : '';
 			echo "<div class=\"view\" id=\"{$id}\"{$inactive}>\n";
 			if(isset($tab['content']))
@@ -217,6 +227,28 @@ class CTabView extends CWidget
 				$this->getController()->renderPartial($tab['view'], $data);
 			}
 			echo "</div><!-- {$id} -->\n";
+			*/			
+			$inactive=$id!==$this->activeTab?' style="display:none"' : '';
+			$active=$id==$this->activeTab?'active' : '';
+			echo "<div class=\"content {$active}\" id=\"{$id}\"{$inactive}>\n";
+			if(isset($tab['content']))
+				echo $tab['content'];
+			elseif(isset($tab['view']))
+			{
+				if(isset($tab['data']))
+				{
+					if(is_array($this->viewData))
+						$data=array_merge($this->viewData, $tab['data']);
+					else
+						$data=$tab['data'];
+				}
+				else
+					$data=$this->viewData;
+				$this->getController()->renderPartial($tab['view'], $data);
+			}
+			echo "</div><!-- {$id} -->\n";
+			
 		}
+		echo "</div>\n";//custom
 	}
 }
