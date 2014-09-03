@@ -1,12 +1,12 @@
 <?php
 
-class ProjectController extends Controller
+class ConsultantController extends Controller
 {
 	public $layout='//layouts/master';
 	
-	public function actionManageproject()
+	public function actionManageconsultant()
 	{
-		$this->render('manageproject');
+		$this->render('manageconsultant');
 	}
 
 	// Uncomment the following methods and override them if needed

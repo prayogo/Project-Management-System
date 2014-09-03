@@ -1,12 +1,12 @@
 <?php
 
-class ProjectController extends Controller
+class PaymentController extends Controller
 {
 	public $layout='//layouts/master';
 	
-	public function actionManageproject()
+	public function actionManagepayment()
 	{
-		$this->render('manageproject');
+		$this->render('managepayment');
 	}
 
 	// Uncomment the following methods and override them if needed

@@ -1,12 +1,12 @@
 <?php
 
-class ProjectController extends Controller
+class DeliverableController extends Controller
 {
 	public $layout='//layouts/master';
 	
-	public function actionManageproject()
+	public function actionManagedeliverable()
 	{
-		$this->render('manageproject');
+		$this->render('managedeliverable');
 	}
 
 	// Uncomment the following methods and override them if needed

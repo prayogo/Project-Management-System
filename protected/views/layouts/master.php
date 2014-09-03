@@ -69,12 +69,12 @@
               <li class="UM"><a class="sideItem"><i class="fi-key"></i> User Access</a></li>-->
               <li class="divider"></li>
               <li class="heading"><i class="fi-clipboard-pencil"></i> Project Management <a data-switch="show" data-target="PM" class="SidePanel no-select"><i class="fi-minus"></i></a></li>
-              <li class="PM"><a class="sideItem"><i class="fi-torso-business"></i> Customers</a></li>
-              <li class="PM"><a class="sideItem"><i class="fi-clipboard-pencil"></i> Projects</a></li>
-              <li class="PM"><a class="sideItem"><i class="fi-page-multiple"></i> Agreements</a></li>
-              <li class="PM"><a class="sideItem"><i class="fi-results-demographics"></i> Consultants</a></li>
-              <li class="PM"><a class="sideItem"><i class="fi-clipboard-notes"></i> External Deliverable</a></li>
-              <li class="PM"><a class="sideItem"><i class="fi-dollar"></i> External Payments</a></li>
+              <li class="PM"><a class="sideItem" href="<?php echo Yii::app()->createUrl('pms/customer') ?>"><i class="fi-torso-business"></i> Customers</a></li>
+              <li class="PM"><a class="sideItem" href="<?php echo Yii::app()->createUrl('pms/project') ?>"><i class="fi-clipboard-pencil"></i> Projects</a></li>
+              <li class="PM"><a class="sideItem" href="<?php echo Yii::app()->createUrl('pms/agreement') ?>"><i class="fi-page-multiple"></i> Agreements</a></li>
+              <li class="PM"><a class="sideItem" href="<?php echo Yii::app()->createUrl('pms/consultant') ?>"><i class="fi-results-demographics"></i> Consultants</a></li>
+              <li class="PM"><a class="sideItem" href="<?php echo Yii::app()->createUrl('pms/deliverables') ?>"><i class="fi-clipboard-notes"></i> External Deliverable</a></li>
+              <li class="PM"><a class="sideItem" href="<?php echo Yii::app()->createUrl('pms/deliverables') ?>"><i class="fi-dollar"></i> External Payments</a></li>
               <li class="PM"><a class="sideItem"><i class="fi-clipboard-notes"></i> Internal Deliverable</a></li>
               <li class="PM"><a class="sideItem"><i class="fi-list-bullet"></i> Tasks</a></li>
               <li class="PM"><a class="sideItem"><i class="fi-monitor"></i> Monitoring</a></li>

@@ -1,12 +1,12 @@
 <?php
 
-class ProjectController extends Controller
+class AgreementController extends Controller
 {
 	public $layout='//layouts/master';
 	
-	public function actionManageproject()
+	public function actionManageagreement()
 	{
-		$this->render('manageproject');
+		$this->render('manageagreement');
 	}
 
 	// Uncomment the following methods and override them if needed

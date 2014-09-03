@@ -1,14 +1,39 @@
 <?php
 
-class ProjectController extends Controller
+class PmsController extends Controller
 {
 	public $layout='//layouts/master';
 	
-	public function actionManageproject()
+	public function actionCustomer()
 	{
-		$this->render('manageproject');
+		$this->render('customer');
 	}
 
+	public function actionProject ()
+	{
+		$this->render('project');
+	}
+
+	public function actionAgreement ()
+	{
+		$this->render('agreement');
+	}
+
+	public function actionConsultant ()
+	{
+		$this->render('consultant');
+	}
+
+	public function actionDeliverables ()
+	{
+		$this->render('deliverables');
+	}
+
+	public function actionPayment ()
+	{
+		$this->render('payment');
+	}
+	
 	// Uncomment the following methods and override them if needed
 	/*
 	public function filters()
