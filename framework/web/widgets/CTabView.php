@@ -181,7 +181,7 @@ class CTabView extends CWidget
 	 */
 	protected function renderHeader()
 	{
-		echo "<ul class=\"tabs\">\n";
+		echo "<ul class=\"nav nav-tabs\" role=\"tablist\">\n";
 		foreach($this->tabs as $id=>$tab)
 		{
 			/* default
@@ -205,7 +205,7 @@ class CTabView extends CWidget
 	 */
 	protected function renderBody()
 	{	
-		echo "<div class=\"tabs-content\">\n";//custom
+		echo "<div class=\"tab-content\">\n";//custom
 		foreach($this->tabs as $id=>$tab)
 		{
 			/* default 
@@ -230,7 +230,7 @@ class CTabView extends CWidget
 			*/			
 			$inactive=$id!==$this->activeTab?' style="display:none"' : '';
 			$active=$id==$this->activeTab?'active' : '';
-			echo "<div class=\"content {$active}\" id=\"{$id}\"{$inactive}>\n";
+			echo "<div class=\"tab-pane {$active}\" id=\"{$id}\"{$inactive}>\n";
 			if(isset($tab['content']))
 				echo $tab['content'];
 			elseif(isset($tab['view']))

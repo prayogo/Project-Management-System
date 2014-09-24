@@ -1,7 +1,6 @@
-<form>
-  <div class="row">
+<form>  
     <div class="small-8">
-      <div class="row">
+      <div class="">
         <div class="small-3 columns">
           <label for="right-label" class="right inline">User Name</label>
         </div>
@@ -9,7 +8,7 @@
           <input type="text" id="right-label" placeholder="User Name...">
         </div>
       </div>
-      <div class="row">
+      <div class="">
         <div class="small-3 columns">
           <label for="right-label" class="right inline">Password</label>
         </div>
@@ -17,7 +16,7 @@
           <input type="password" id="right-label" placeholder="Password...">
         </div>
       </div>
-      <div class="row">
+      <div class="">
         <div class="small-3 columns">
           <label for="right-label" class="right inline">Confirm Password</label>
         </div>
@@ -25,7 +24,7 @@
           <input type="password" id="right-label" placeholder="Confirm Password...">
         </div>
       </div>
-      <div class="row">
+      <div class="">
         <div class="small-3 columns">
           <label for="right-label" class="right inline">Email</label>
         </div>
@@ -33,7 +32,7 @@
           <input type="email" id="right-label" placeholder="Email...">
         </div>
       </div>
-      <div class="row">
+      <div class="">
         <div class="small-3 columns">
           <label for="right-label" class="right inline">Phone</label>
         </div>
@@ -41,6 +40,5 @@
           <input type="text" id="right-label" placeholder="Phone...">
         </div>
       </div>
-    </div>
-  </div>
+    </div>  
 </form>

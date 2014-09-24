@@ -91,15 +91,12 @@
 	                <i class="fi-clipboard-notes"></i> External Deliverable</a>
                 <a class="PM sideItem list-group-item" href="<?php echo Yii::app()->createUrl('pms/deliverables') ?>">
                 	<i class="fi-dollar"></i> External Payments</a>
-			</div>
-            	
-
-
-
-              <li class="PM"><a class="sideItem"><i class="fi-clipboard-notes"></i> Internal Deliverable</a></li>
-              <li class="PM"><a class="sideItem"><i class="fi-list-bullet"></i> Tasks</a></li>
-              <li class="PM"><a class="sideItem"><i class="fi-monitor"></i> Monitoring</a></li>              
-              <li class="heading"><i class="fi-graph-trend"></i> Report Generator <a style="float:right; font-size:10px; margin-top:3px; padding:0px 3px 0px 3px"></a></li>
+              <a class="PM sideItem list-group-item "><i class="fi-clipboard-notes"></i> Internal Deliverable</a></li>
+              <a class="PM sideItem list-group-item"><i class="fi-list-bullet"></i> Tasks</a></li>
+              <a class="PM sideItem list-group-item"><i class="fi-monitor"></i> Monitoring</a></li>              
+              <a href="#" class="no-select list-group-item side-heading side-trigger" data-switch="show" data-target="RG">                
+        <i class="fi-graph-trend"></i>Report Generator</a>
+        </div>
             </div>
           </nav>
         </div>
