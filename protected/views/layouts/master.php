@@ -119,7 +119,7 @@
     </div>
   </div>
   <div class="clear"></div>
-  
+  <!--
   <nav class="navbar navbar-default navbar-fixed-bottom collapse navbar-collapse" role="navigation" style="background:rgb(182, 182, 182)">
   <div class="container-fluid">
     <div>
@@ -137,7 +137,7 @@
       </ul>
     </div>
   </div>
-</nav>
+</nav>-->
   
 </div>
 <!-- page -->
