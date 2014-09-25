@@ -18,6 +18,8 @@
  */
 class UserDetailForm extends CActiveRecord
 {
+	public $Confirm_Password;
+	public $Copy_User;
 	/**
 	 * @return string the associated database table name
 	 */
@@ -34,12 +36,13 @@ class UserDetailForm extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('Username, Name, Email, Phone, Password', 'required'),
-			array('Username, Password, UserIn, UserUp', 'length', 'max'=>50),
+			array('Username, Name, Email, Phone, Password, Confirm_Password', 'required'),
+			array('Username, Password, Confirm_Password, UserIn, UserUp', 'length', 'max'=>50),
 			array('Name', 'length', 'max'=>250),
 			array('Email', 'length', 'max'=>150),
 			array('Phone', 'length', 'max'=>20),
 			array('Enable', 'length', 'max'=>1),
+			array('Password','compare','compareAttribute'=>'Confirm_Password'),
 			array('DateIn, DateUp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
@@ -70,6 +73,8 @@ class UserDetailForm extends CActiveRecord
 			'Email' => 'Email',
 			'Phone' => 'Phone',
 			'Password' => 'Password',
+			'Confirm_Password' => 'Confirm Password',
+			'Copy_User' => 'Copy Existing User',
 			'Enable' => 'Enable',
 			'UserIn' => 'User In',
 			'DateIn' => 'Date In',
@@ -122,5 +127,54 @@ class UserDetailForm extends CActiveRecord
 	public static function model($className=__CLASS__)
 	{
 		return parent::model($className);
+	}
+
+	/**
+	 * Function for get single user detail, return 1 row
+	 * @param string $UserId, user id.
+	*/
+	public function getUserDetail($UserId){
+		$connection=Yii::app()->db;
+		$connection->active=true;
+	
+		try
+		{ 
+			$sql = "call Spr_Get_UserDetail (".$UserId.")";
+			$command=$connection->createCommand($sql);
+			$dataReader=$command->query();
+			$rows=$dataReader->readAll();
+			return $rows;
+		}
+		catch(Exception $e)
+		{
+			$response = array('code'=>'', 'exception'=>'');
+			$response['code'] = StandardVariable::CONSTANT_RETUNN_ERROR;
+			$response['exception'] = $e->errorInfo;
+			return $response;
+		}
+	}
+
+	/**
+	 * Function for get list user
+	*/
+	public function getUserList(){
+		$connection=Yii::app()->db;
+		$connection->active=true;
+	
+		try
+		{ 
+			$sql = "call Spr_Get_UserList()";
+			$command=$connection->createCommand($sql);
+			$dataReader=$command->query();
+			$rows=$dataReader->readAll();
+			return $rows;
+		}
+		catch(Exception $e)
+		{
+			$response = array('code'=>'', 'exception'=>'');
+			$response['code'] = StandardVariable::CONSTANT_RETUNN_ERROR;
+			$response['exception'] = $e->errorInfo;
+			return $response;
+		}
 	}
 }

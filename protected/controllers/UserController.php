@@ -4,35 +4,56 @@ class UserController extends Controller
 {
 	public $layout='//layouts/master';
 	
+	/**
+	 * This is the default 'index' action that is invoked
+	 * when an action is not explicitly requested by users.
+	 */
+	public function actionIndex()
+	{
+		$this->actionManageuser();
+	}
+
 	public function actionManageuser()
 	{
-		$this->render('manageuser');
-	}
+		$model=new UserDetailForm;
+		$model->Enable=1;
+		if(isset($_POST['ajax']) && $_POST['ajax']==='user-detail-form-userdetail-form')
+		{
+			echo CActiveForm::validate($model);
+			Yii::app()->end();
+		}
+		
+		// user detail form POST
+		if(isset($_POST['UserDetailForm']))
+		{
+			$model->attributes=$_POST['UserDetailForm'];
+			if($model->validate())
+			{
+				$response = $model->getUserDetail($model->UserId);
+				if ($model->UserId != null && $model->UserId != ""){
+					if (!empty($response) && isset($response['UserId'])){
+						echo 1;	
+					}
+					else{
+						//$response1 = $model->insertMenu($Caption, $Link, $Icon, $Description, $Enable);
+						if ($response1['code'] == 'M1'){
+							$this->redirect(array('um/user'));
+						}else{
+							$model->addError('request', $response1['exception'][2]);
+						}
+					}
+				}
+				else{
+					//$response1 = $model->insertMenu($Caption, $Link, $Icon, $Description, $Enable);
+					if ($response1['code'] == 'M1'){
+						$this->redirect(array('um/user'));
+					}else{
+						$model->addError('request', $response1['exception'][2]);
+					}
+				}
+			}
+		}
 
-	// Uncomment the following methods and override them if needed
-	/*
-	public function filters()
-	{
-		// return the filter configuration for this controller, e.g.:
-		return array(
-			'inlineFilterName',
-			array(
-				'class'=>'path.to.FilterClass',
-				'propertyName'=>'propertyValue',
-			),
-		);
+		$this->render('manageuser', array('model'=>$model));
 	}
-
-	public function actions()
-	{
-		// return external action classes, e.g.:
-		return array(
-			'action1'=>'path.to.ActionClass',
-			'action2'=>array(
-				'class'=>'path.to.AnotherActionClass',
-				'propertyName'=>'propertyValue',
-			),
-		);
-	}
-	*/
 }

@@ -10,8 +10,15 @@ class UmController extends Controller
 	}
 
 	public function actionUser()
-	{
-		$this->render('user');
+	{		
+		$model=new UserDetailForm;
+		$response = $model->getUserList();
+		if (isset($response['code']) && $response['code'] == 'M0'){
+			$model->addError('request', $response['exception'][2]);	
+		}else{
+
+		}
+		$this->render('user', array('model'=>$model, 'data'=>$response));
 	}
 
 	public function actionMenu()
