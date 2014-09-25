@@ -16,7 +16,14 @@ class UmController extends Controller
 
 	public function actionMenu()
 	{
-		$this->render('menu');
+		$model=new MenuDetailForm;
+		$response = $model->getMenuList();
+		if (isset($response['code']) && $response['code'] == 'M0'){
+			$model->addError('request', $response['exception'][2]);	
+		}else{
+
+		}
+		$this->render('menu', array('model'=>$model, 'data'=>$response));
 	}
 
 

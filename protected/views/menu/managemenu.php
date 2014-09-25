@@ -6,8 +6,9 @@ $this->breadcrumbs=array(
 	'Menu',
 );
 ?>
+
 <h1 class="blok"><i class="fi-torso-business"></i> Manage Menu</h1>
-<div class="blok">
+<div>
   <div class="metro">
     <?php
       $tab1 = 'panel2-1';
@@ -18,7 +19,8 @@ $this->breadcrumbs=array(
           'tabs'=>array(
               $tab1 => array(                
                   'title'=>'Menu Detail', 
-                  'view'=>'menudetail'
+                  'view'=>'menudetail',
+				  'data'=>array('model'=>$model),
               ), 
               $tab2 => array(                
                   'title'=>'Menu User',

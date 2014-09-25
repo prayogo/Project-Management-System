@@ -45,19 +45,25 @@ return array(
 			'caseSensitive'=>false,  
 		),
 
-		'db'=>array(
+		/*'db'=>array(
 			'connectionString' => 'sqlite:'.dirname(__FILE__).'/../data/testdrive.db',
-		),
+		),*/
 		// uncomment the following to use a MySQL database
-		/*
+		
 		'db'=>array(
-			'connectionString' => 'mysql:host=localhost;dbname=testdrive',
+			'connectionString' => 'mysql:host=10.200.200.66;dbname=pms',
+			'emulatePrepare' => true,
+			'username' => 'pms',
+			'password' => '12345abc',
+			'charset' => 'utf8',
+		),
+/*		'db'=>array(
+			'connectionString' => 'mysql:host=localhost;dbname=pms',
 			'emulatePrepare' => true,
 			'username' => 'root',
 			'password' => '',
 			'charset' => 'utf8',
-		),
-		*/
+		),*/
 		'errorHandler'=>array(
 			// use 'site/error' action to display errors
 			'errorAction'=>'site/error',

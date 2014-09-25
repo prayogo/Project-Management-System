@@ -2013,10 +2013,10 @@ EOD;
 		if($content!=='')
 		{
 			if($header===null)
-				$header='<p>'.Yii::t('yii','Please fix the following input errors:').'</p>';
+				$header='<div class="panel-heading">'.Yii::t('yii','Oops, something happened:').'</div>';
 			if(!isset($htmlOptions['class']))
-				$htmlOptions['class']=self::$errorSummaryCss;
-			return self::tag('div',$htmlOptions,$header."\n<ul>\n$content</ul>".$footer);
+				$htmlOptions['class']="panel panel-danger";//CHtml::$errorSummaryCss;
+			return self::tag('div',$htmlOptions,$header."\n<div class='panel-body'><ul style='margin-left:-10px'>\n$content</ul></div>".$footer);
 		}
 		else
 			return '';

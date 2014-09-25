@@ -219,3 +219,12 @@ user-select: none;
 	padding-top:1px;
 	padding-bottom:24px;
 }
+.panel-body>h3 {
+	border: none;
+	font-size: 1.2em;
+	line-height: 2.2em;
+	height: 2.2em;
+	border-bottom: solid 1px #eee;
+	padding: 0 0 0 5px;
+	margin: -15px 0px 15px 0px;
+}
