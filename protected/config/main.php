@@ -5,6 +5,7 @@
 
 // This is the main Web application configuration. Any writable
 // CWebApplication properties can be configured here.
+Yii::setPathOfAlias('booster', dirname(__FILE__) . DIRECTORY_SEPARATOR . '../extensions/yiibooster');
 return array(
 	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
 	'name'=>'BINUS Creates - Project Management System',
@@ -33,6 +34,9 @@ return array(
 
 	// application components
 	'components'=>array(
+		'bootstrap' => array(
+            'class' => 'booster.components.Booster',
+        ),
 		'user'=>array(
 			// enable cookie-based authentication
 			'allowAutoLogin'=>true,
@@ -83,7 +87,7 @@ return array(
 			),
 		),*/
 	),
-
+	'preload'=>array('bootstrap'),
 	// application-level parameters that can be accessed
 	// using Yii::app()->params['paramName']
 	'params'=>array(
