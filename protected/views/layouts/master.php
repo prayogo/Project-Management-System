@@ -7,7 +7,6 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/bootstrap.min.css" />
 <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/normalize.css" />
 <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/foundation-icons/foundation-icons.css" />
 <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/main2.css" />
@@ -16,7 +15,7 @@
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/js/vendor/modernizr.js"></script>
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/js/attrchange.js"></script> 
 
-<script src="<?php echo Yii::app()->request->baseUrl; ?>/js/bootstrap.min.js"></script>
+
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/js/vendor/fastclick.js"></script>
 
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.widget.min.js"></script>

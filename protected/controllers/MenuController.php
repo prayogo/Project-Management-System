@@ -62,5 +62,4 @@ class MenuController extends Controller
 
 		$this->render('managemenu', array('model'=>$model));
 	}
-
 }
