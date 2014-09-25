@@ -4,81 +4,103 @@
 /* @var $form CActiveForm */
 ?>
 
-<div class="form">
+<div class="panel panel-default">
 
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'user-detail-form-userdetail-form',
-	// Please note: When you enable ajax validation, make sure the corresponding
-	// controller action is handling ajax validation correctly.
-	// See class documentation of CActiveForm for details on this,
-	// you need to use the performAjaxValidation()-method described there.
-	'enableAjaxValidation'=>false,
+	'enableClientValidation'=>true,
+	'clientOptions'=>array(
+		'validateOnSubmit'=>true,
+	),
 )); ?>
-
-	<p class="note">Fields with <span class="required">*</span> are required.</p>
+<div class="panel-body">
+    <div class="form-horizontal" role="form">    
+    
+    <?php 
+			$form->error($model,'Username');
+        	$form->error($model,'Name'); 
+			$form->error($model,'Email');
+			$form->error($model,'Phone');
+			$form->error($model,'Password');			
+			
+		echo $form->errorSummary($model);
+	?>
+	<?php $model->UserId ?>
+	<!-- <p class="note">Fields with <span class="required">*</span> are required.</p> -->
 
 	<?php echo $form->errorSummary($model); ?>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'Username'); ?>
-		<?php echo $form->textField($model,'Username'); ?>
-		<?php echo $form->error($model,'Username'); ?>
-	</div>
+	<div class="form-group">
+        <div class="col-1"><span class="pull-right"></span>
+        	<?php echo $form->labelEx($model,'Username', array('class'=>'control-label col-lg-2')); ?>
+        </div>
+        <div class="col-lg-6">
+        	<?php echo $form->textField($model,'Username', array('class'=>'form-control')); ?>        
+        </div>
+    </div>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'Name'); ?>
-		<?php echo $form->textField($model,'Name'); ?>
-		<?php echo $form->error($model,'Name'); ?>
-	</div>
+	<div class="form-group">
+        <div class="col-1"><span class="pull-right"></span>
+        	<?php echo $form->labelEx($model,'Name', array('class'=>'control-label col-lg-2')); ?>
+        </div>
+        <div class="col-lg-6">
+        	<?php echo $form->textField($model,'Name', array('class'=>'form-control')); ?>        
+        </div>
+    </div>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'Email'); ?>
-		<?php echo $form->textField($model,'Email'); ?>
-		<?php echo $form->error($model,'Email'); ?>
-	</div>
+    <div class="form-group">
+        <div class="col-1"><span class="pull-right"></span>
+        	<?php echo $form->labelEx($model,'Email', array('class'=>'control-label col-lg-2')); ?>
+        </div>
+        <div class="col-lg-6">
+        	<?php echo $form->textField($model,'Email', array('class'=>'form-control')); ?>        
+        </div>
+    </div>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'Phone'); ?>
-		<?php echo $form->textField($model,'Phone'); ?>
-		<?php echo $form->error($model,'Phone'); ?>
-	</div>
+    <div class="form-group">
+        <div class="col-1"><span class="pull-right"></span>
+        	<?php echo $form->labelEx($model,'Phone', array('class'=>'control-label col-lg-2')); ?>
+        </div>
+        <div class="col-lg-6">
+        	<?php echo $form->textField($model,'Phone', array('class'=>'form-control')); ?>        
+        </div>
+    </div>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'Password'); ?>
-		<?php echo $form->textField($model,'Password'); ?>
-		<?php echo $form->error($model,'Password'); ?>
-	</div>
+	<div class="form-group">
+        <div class="col-1"><span class="pull-right"></span>
+        	<?php echo $form->labelEx($model,'Password', array('class'=>'control-label col-lg-2')); ?>
+        </div>
+        <div class="col-lg-6">
+        	<?php echo $form->PasswordField($model,'Password', array('class'=>'form-control')); ?>        
+        </div>
+    </div>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'UserIn'); ?>
-		<?php echo $form->textField($model,'UserIn'); ?>
-		<?php echo $form->error($model,'UserIn'); ?>
-	</div>
+	<div class="form-group">
+        <div class="col-1"><span class="pull-right"></span>
+        	<?php echo $form->labelEx($model,'Confirm_Password', array('class'=>'control-label col-lg-2')); ?>
+    	</div>
+        <div class="col-lg-6">
+        	<?php echo $form->PasswordField($model,'Confirm_Password', array('class'=>'form-control')); ?>        
+        </div>
+    </div>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'UserUp'); ?>
-		<?php echo $form->textField($model,'UserUp'); ?>
-		<?php echo $form->error($model,'UserUp'); ?>
-	</div>
+	<div class="form-group">
+        <div class="col-1"><span class="pull-right"></span>
+            	<?php echo $form->labelEx($model,'Copy_User', array('class'=>'control-label col-lg-2')); ?>
+        </div>
+		<div class="col-lg-6" style="margin-top:5px">
+	        <?php echo $form->CheckBox($model,'Copy_User'); ?>
+		</div>
+    </div>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'Enable'); ?>
-		<?php echo $form->textField($model,'Enable'); ?>
-		<?php echo $form->error($model,'Enable'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'DateIn'); ?>
-		<?php echo $form->textField($model,'DateIn'); ?>
-		<?php echo $form->error($model,'DateIn'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'DateUp'); ?>
-		<?php echo $form->textField($model,'DateUp'); ?>
-		<?php echo $form->error($model,'DateUp'); ?>
-	</div>
-
+	<div class="form-group">
+        <div class="col-1"><span class="pull-right"></span>
+            	<?php echo $form->labelEx($model,'Enable', array('class'=>'control-label col-lg-2')); ?>
+        </div>
+		<div class="col-lg-6" style="margin-top:5px">
+	        <?php echo $form->radioButtonList($model,'Enable', array('1'=>'Yes', '0'=>'No'), array('labelOptions'=>array('style'=>'margin-right:20px;'), 'separator'=>'')); ?>
+		</div>
+    </div>
 
 	<div class="row buttons">
 		<?php echo CHtml::submitButton('Submit'); ?>
