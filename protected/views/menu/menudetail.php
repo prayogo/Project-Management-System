@@ -25,18 +25,7 @@
 			
 		echo $form->errorSummary($model);
 		?>
-        <?php
-			
-			$this->widget(
-				'booster.widgets.TbLabel',
-				array(
-					'context' => 'success',
-					// 'default', 'primary', 'success', 'info', 'warning', 'danger'
-					'label' => 'Success',
-				)
-			);
-		
-		?>
+       
         <?php $model->MenuId ?>
         <div class="form-group">
             <div class="col-1"><span class="pull-right"></span></div>

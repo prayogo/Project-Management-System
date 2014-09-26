@@ -188,4 +188,35 @@ class MenuDetailForm extends CActiveRecord
 			return $response;
 		}
 	}
+	
+	/**
+	 * Function for delete menu
+	 * @param string $MenuId.
+	*/
+	public function deleteMenu($MenuId)
+	{
+		$response = array('code'=>'', 'exception'=>'');
+		$connection=Yii::app()->db;
+		$connection->active=true;
+		$username=GlobalFunction::getLoginUserName();
+		
+		$transaction=$connection->beginTransaction();
+		try
+		{ 
+			$sql = "call Spr_Delete_Menu (".$MenuId.",'".$username."')";
+			$command=$connection->createCommand($sql);
+			$status=$command->execute();
+		   	$transaction->commit();
+			var_dump($status);
+		   	$response['code'] = StandardVariable::CONSTANT_RETURN_SUCCESS;
+		}
+		catch(Exception $e)
+		{
+			$response['code'] = StandardVariable::CONSTANT_RETUNN_ERROR;
+			$response['exception'] = $e->errorInfo;
+		   	$transaction->rollback();
+		}
+		
+		return $response;
+	}
 }

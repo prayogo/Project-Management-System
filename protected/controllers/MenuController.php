@@ -42,7 +42,7 @@ class MenuController extends Controller
 					}
 					else{
 						$response1 = $model->insertMenu($Caption, $Link, $Icon, $Description, $Enable);
-						if ($response1['code'] == 'M1'){
+						if ($response1['code'] == StandardVariable::CONSTANT_RETURN_SUCCESS){
 							$this->redirect(array('um/menu'));
 						}else{
 							$model->addError('request', $response1['exception'][2]);
@@ -51,7 +51,7 @@ class MenuController extends Controller
 				}
 				else{
 					$response1 = $model->insertMenu($Caption, $Link, $Icon, $Description, $Enable);
-					if ($response1['code'] == 'M1'){
+					if ($response1['code'] == StandardVariable::CONSTANT_RETURN_SUCCESS){
 						$this->redirect(array('um/menu'));
 					}else{
 						$model->addError('request', $response1['exception'][2]);
