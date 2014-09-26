@@ -21,7 +21,7 @@
         	$form->error($model,'Name'); 
 			$form->error($model,'Email');
 			$form->error($model,'Phone');
-			$form->error($model,'Password');			
+			$form->error($model,'Password');
 			
 		echo $form->errorSummary($model);
 	?>
@@ -86,32 +86,44 @@
 
 	<div class="form-group">
         <div class="col-1"><span class="pull-right"></span>
-            	<?php echo $form->labelEx($model,'Copy_User', array('class'=>'control-label col-lg-2')); ?>
+            <?php echo $form->labelEx($model,'Copy_User', array('class'=>'control-label col-lg-2')); ?>
         </div>
 		<div class="col-lg-6" style="margin-top:5px">
-	        <?php echo $form->CheckBox($model,'Copy_User'); ?>
+	        <?php echo $form->CheckBox($model,'Copy_User',array('class'=>'check')); ?>
+		</div>
+    </div>
+
+    <div class="form-group" >
+        <div class="col-1"><span class="pull-right"></span>
+            <?php echo $form->labelEx($model,'User', array('class'=>'control-label col-lg-2')); ?>
+        </div>
+		<div class="col-lg-6" style="margin-top:5px">
+	        <?php echo $form->TextField($model,'User', array('class'=>'form-control','enabled'=>'enabled')); ?>
 		</div>
     </div>
 
 	<div class="form-group">
         <div class="col-1"><span class="pull-right"></span>
-            	<?php echo $form->labelEx($model,'Enable', array('class'=>'control-label col-lg-2')); ?>
+            <?php echo $form->labelEx($model,'Enable', array('class'=>'control-label col-lg-2')); ?>
         </div>
 		<div class="col-lg-6" style="margin-top:5px">
 	        <?php echo $form->radioButtonList($model,'Enable', array('1'=>'Yes', '0'=>'No'), array('labelOptions'=>array('style'=>'margin-right:20px;'), 'separator'=>'')); ?>
 		</div>
     </div>
+    
+	<div class="panel-footer">
+		<div>
+	        <button class="btn btn-default">
+	            <i class="glyphicon glyphicon-remove" style="display:block;font-size:26px;"></i>Cancel
+	        </button>
+	        <button type="submit" class="btn btn-default pull-right">
+	            <i class="glyphicon glyphicon-floppy-disk" style="display:block;font-size:26px;"></i>Save
+	        </button>
+	    </div>
+	</div>
+	<?php $this->endWidget(); ?>
 
-<div class="panel-footer">
-	<div>
-        <button class="btn btn-default">
-            <i class="glyphicon glyphicon-remove" style="display:block;font-size:26px;"></i>Cancel
-        </button>
-        <button type="submit" class="btn btn-default pull-right">
-            <i class="glyphicon glyphicon-floppy-disk" style="display:block;font-size:26px;"></i>Save
-        </button>
-    </div>
+		</div><!-- form -->
+	</div>
 </div>
-<?php $this->endWidget(); ?>
 
-</div><!-- form -->
