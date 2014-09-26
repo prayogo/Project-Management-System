@@ -20,6 +20,8 @@ class UserDetailForm extends CActiveRecord
 {
 	public $Confirm_Password;
 	public $Copy_User;
+	public $User;
+
 	/**
 	 * @return string the associated database table name
 	 */
@@ -39,10 +41,12 @@ class UserDetailForm extends CActiveRecord
 			array('Username, Name, Email, Phone, Password, Confirm_Password', 'required'),
 			array('Username, Password, Confirm_Password, UserIn, UserUp', 'length', 'max'=>50),
 			array('Name', 'length', 'max'=>250),
-			array('Email', 'length', 'max'=>150),
+			array('Email', 'length', 'max'=>150),			
 			array('Phone', 'length', 'max'=>20),
 			array('Enable', 'length', 'max'=>1),
 			array('Password','compare','compareAttribute'=>'Confirm_Password'),
+			array('Email', 'email'),
+			array('Username','unique'),
 			array('DateIn, DateUp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
@@ -80,6 +84,7 @@ class UserDetailForm extends CActiveRecord
 			'DateIn' => 'Date In',
 			'UserUp' => 'User Up',
 			'DateUp' => 'Date Up',
+			'User' => 'User',
 		);
 	}
 
@@ -178,3 +183,4 @@ class UserDetailForm extends CActiveRecord
 		}
 	}
 }
+
