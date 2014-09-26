@@ -45,7 +45,7 @@ $this->breadcrumbs=array(
 						),
 					));
 echo '<button type="submit" class="btn-link" style="padding-left:0px; padding-right:2px"><span class="glyphicon glyphicon-pencil"></span></button> 
-	<button type="submit" class="btn-link" style="padding-left:0px; padding-right:2px"><span class="glyphicon glyphicon-trash"></span></button>';
+	<button type="submit" class="btn-link delete" style="padding-left:0px; padding-right:2px"><span class="glyphicon glyphicon-trash"></span></button>';
 						$model->MenuId = $data[$i]['MenuId'];
 					echo $form->hiddenField($model,'MenuId');
 					$this->endWidget();				
