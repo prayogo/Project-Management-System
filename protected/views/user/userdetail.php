@@ -102,10 +102,16 @@
 		</div>
     </div>
 
-	<div class="row buttons">
-		<?php echo CHtml::submitButton('Submit'); ?>
-	</div>
-
+<div class="panel-footer">
+	<div>
+        <button class="btn btn-default">
+            <i class="glyphicon glyphicon-remove" style="display:block;font-size:26px;"></i>Cancel
+        </button>
+        <button type="submit" class="btn btn-default pull-right">
+            <i class="glyphicon glyphicon-floppy-disk" style="display:block;font-size:26px;"></i>Save
+        </button>
+    </div>
+</div>
 <?php $this->endWidget(); ?>
 
 </div><!-- form -->
