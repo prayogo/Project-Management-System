@@ -24,12 +24,23 @@ class UmController extends Controller
 	public function actionMenu()
 	{
 		$model=new MenuDetailForm;
-		$response = $model->getMenuList();
-		if (isset($response['code']) && $response['code'] == 'M0'){
-			$model->addError('request', $response['exception'][2]);	
-		}else{
-
+		
+		if (isset($_POST['MenuDetailForm'])){
+			if ($_POST['MenuDetailForm']['MenuId'] != null && $_POST['MenuDetailForm']['MenuId'] != ""){
+				$response1 = $model->deleteMenu($_POST['MenuDetailForm']['MenuId']);
+				if ($response1['code'] == StandardVariable::CONSTANT_RETURN_SUCCESS){
+					$this->refresh();
+				}else{
+					$model->addError('request', $response1['exception'][2]);
+				}
+			}
 		}
+		
+		if (isset($response['code']) && $response['code'] == StandardVariable::CONSTANT_RETUNN_ERROR){
+			$model->addError('request', $response['exception'][2]);	
+		}
+		
+		$response = $model->getMenuList();
 		$this->render('menu', array('model'=>$model, 'data'=>$response));
 	}
 

@@ -57,13 +57,11 @@
     </nav>
 
 
-  <div id="mainmenu">
-    <div style="margin-left:0px; margin-right:0px">
-      <div style="background:#FAFAFA; border:1px solid #f3f3f3;float:left" id="containerLeft">
-        <div class="sidebar" >
+  <div id="mainmenu" class="container-fluid">
+    <div class="row">
+        <div class="sidebar col-md-3 pull-left" >
           <nav>
             <div class="list-group" style="width:250px">
-            
 				<a class="no-select list-group-item side-heading side-trigger" data-switch="show" data-target="UM">
                 	<span class="badge"><span name="bgicon" class="glyphicon glyphicon-minus"></span></span>
                     	<i class="fi-torsos"></i> User Management</a>              
@@ -91,17 +89,15 @@
 	                <i class="fi-clipboard-notes"></i> External Deliverable</a>
                 <a class="PM sideItem list-group-item" href="<?php echo Yii::app()->createUrl('pms/deliverables') ?>">
                 	<i class="fi-dollar"></i> External Payments</a>
-              <a class="PM sideItem list-group-item "><i class="fi-clipboard-notes"></i> Internal Deliverable</a></li>
-              <a class="PM sideItem list-group-item"><i class="fi-list-bullet"></i> Tasks</a></li>
-              <a class="PM sideItem list-group-item"><i class="fi-monitor"></i> Monitoring</a></li>              
-              <a href="#" class="no-select list-group-item side-heading side-trigger" data-switch="show" data-target="RG">                
-        <i class="fi-graph-trend"></i> Report Generator</a>
-        </div>
+              	<a class="PM sideItem list-group-item "><i class="fi-clipboard-notes"></i> Internal Deliverable</a></li>
+                <a class="PM sideItem list-group-item"><i class="fi-list-bullet"></i> Tasks</a></li>
+                <a class="PM sideItem list-group-item"><i class="fi-monitor"></i> Monitoring</a></li>              
+                <a href="#" class="no-select list-group-item side-heading side-trigger" data-switch="show" data-target="RG">                
+                	<i class="fi-graph-trend"></i> Report Generator</a>
             </div>
           </nav>
         </div> 
-      </div>      
-      <div class="large-9 medium-8 columns" style="float:right; margin-top:10px;" id="containerRight"> 
+      <div class="col-md-9 pull-right" id="containerRight"> 
         <!-- mainmenu -->
         <?php if(isset($this->breadcrumbs)):?>
         <?php $this->widget('zii.widgets.CBreadcrumbs', array(
@@ -186,16 +182,4 @@
 	});
 	$('#menuTrigger').click();
 	
-	$('.reveal-modal').attrchange({
-		trackValues: true,
-		callback: function (event) { 
-			if($('.reveal-modal.open').length > 0){
-				$('body').css('overflow','hidden');
-			}else{
-				$('body').css('overflow','');
-			}
-		}        
-	});
-	
-
 </script>
