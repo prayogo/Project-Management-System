@@ -24,8 +24,6 @@ class MenuController extends Controller
 			Yii::app()->end();
 		}
 		
-		var_dump($_POST);		
-		
 		// menu detail form POST
 		if(isset($_POST['MenuDetailForm']))
 		{

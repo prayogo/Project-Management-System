@@ -101,7 +101,7 @@
 		query: function(query) {
 			$.ajax({
 				url: "http://localhost:8088/pms/menu/GetParentMenuList", 
-				data: { ajax: 1, menuid: <?php echo $model->MenuId ?>, },
+				data: { ajax: 1, menuid: <?php echo (isset($model->MenuId) && $model->MenuId != "") ? $model->MenuId : 0 ?>, },
 				dataType: 'json',
 				type: "POST",
 				success: function(data) {
@@ -119,10 +119,12 @@
             var id = $(element).val();
             if(id !== "") {
                 $.ajax("http://localhost:8088/pms/menu/GetParentMenuList", {
-                    data: {id: id, ajax: 1, menuid: <?php echo $model->MenuId ?>},
+                    data: {id: id, ajax: 1, menuid: <?php echo (isset($model->MenuId) && $model->MenuId != "") ? $model->MenuId : 0 ?>},
                     dataType: "json", type: "POST"
                 }).done(function(data) {
-                    callback({"text":data[0].Caption});
+					if (data.length > 0){
+                    	callback({"text":data[0].Caption});
+					}
                 });
             }
 		}
