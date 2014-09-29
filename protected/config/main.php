@@ -47,6 +47,9 @@ return array(
 			'urlFormat'=>'path',
 			'showScriptName'=>false,
 			'caseSensitive'=>false,  
+			'rules'=>array(
+
+            ),
 		),
 
 		/*'db'=>array(
