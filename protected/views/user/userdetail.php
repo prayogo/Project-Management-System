@@ -28,7 +28,6 @@
 	<?php $model->UserId ?>
 	<!-- <p class="note">Fields with <span class="required">*</span> are required.</p> -->
 
-	<?php echo $form->errorSummary($model); ?>
 
 	<div class="form-group">
         <div class="col-1"><span class="pull-right"></span>
@@ -97,8 +96,8 @@
         <div class="col-1"><span class="pull-right"></span>
             <?php echo $form->labelEx($model,'User', array('class'=>'control-label col-lg-2')); ?>
         </div>
-		<div class="col-lg-6" style="margin-top:5px">
-	        <?php echo $form->TextField($model,'User', array('class'=>'form-control')); ?>
+		<div class="col-lg-6" style="margin-top:5px">	        
+            <?php $this->widget('booster.widgets.TbSelect2', array('name' => 'User', 'data' => $data,'options' => array('placeholder' => '','width' => '100%',))); ?>
 		</div>
     </div>
 
@@ -121,6 +120,7 @@
 	        </button>
 	    </div>
 	</div>
+        
 	<?php $this->endWidget(); ?>
 
 		</div><!-- form -->

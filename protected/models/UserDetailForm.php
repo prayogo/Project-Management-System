@@ -42,11 +42,13 @@ class UserDetailForm extends CActiveRecord
 			array('Username, Password, Confirm_Password, UserIn, UserUp', 'length', 'max'=>50),
 			array('Name', 'length', 'max'=>250),
 			array('Email', 'length', 'max'=>150),			
-			array('Phone', 'length', 'max'=>20),
-			array('Enable', 'length', 'max'=>1),
+			array('Phone', 'length', 'max'=>20),			
+			array('Enable', 'boolean'),
 			array('Password','compare','compareAttribute'=>'Confirm_Password'),
 			array('Email', 'email'),
 			array('Username','unique'),
+			array('Email','unique'),
+			array('Phone', 'numerical','integerOnly'=>true),
 			array('DateIn, DateUp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
@@ -71,7 +73,7 @@ class UserDetailForm extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'UserId' => 'User',
+			'UserId' => 'UserId',
 			'Username' => 'Username',
 			'Name' => 'Name',
 			'Email' => 'Email',
@@ -181,6 +183,76 @@ class UserDetailForm extends CActiveRecord
 			$response['exception'] = $e->errorInfo;
 			return $response;
 		}
+	}
+
+	/**
+	 * Function for get list user, return user id and username
+	 * select all user list for drop down list
+	*/
+	public function getUserListDDL(){
+		$connection=Yii::app()->db;
+		$connection->active=true;
+	
+		try
+		{ 
+			$sql = "call Spr_Get_UserList()";
+			$command=$connection->createCommand($sql);
+			$dataReader=$command->query();
+			$id = array();
+			$text = array();
+			
+			$id[] = 0;
+			$text[] = '';
+
+			while(($row=$dataReader->read())!==false){
+				$id[] = $row['UserId'];
+				$text[] = $row['Username'];
+			}
+			return array_combine($id, $text);
+		}
+		catch(Exception $e)
+		{
+			$response = array('code'=>'', 'exception'=>'');
+			$response['code'] = StandardVariable::CONSTANT_RETUNN_ERROR;
+			$response['exception'] = $e->errorInfo;
+			return $response;
+		}
+	}
+
+	/**
+	 * Function for insert user detail
+	 * @param string $Username, username.
+	 * @param string $Name, name.
+	 * @param string $Email, email.
+	 * @param string $Phone, phone.
+	 * @param int $Password, password
+	 * @param boolean $Enable, enable/disable menu.
+	*/
+	public function insertUser($Username, $Name, $Email, $Phone, $Password, $Enable)
+	{
+		$response = array('code'=>'', 'exception'=>'');
+		$connection=Yii::app()->db;
+		$connection->active=true;
+		$userin=GlobalFunction::getLoginUserName();
+		
+		$transaction=$connection->beginTransaction();
+		try
+		{ 
+			$sql = "call Spr_Insert_User ('".$Username."', '".$Name."', '".$Email."', 
+				'".$Phone."',".$Password.",'".$Enable."', '".$userin."')";
+			$command=$connection->createCommand($sql);
+			$status=$command->execute();
+		   	$transaction->commit();
+		   	$response['code'] = StandardVariable::CONSTANT_RETURN_SUCCESS;
+		}
+		catch(Exception $e)
+		{
+			$response['code'] = StandardVariable::CONSTANT_RETUNN_ERROR;
+			$response['exception'] = $e->errorInfo;
+		   	$transaction->rollback();
+		}
+		
+		return $response;
 	}
 }
 
