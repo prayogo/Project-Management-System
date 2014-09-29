@@ -31,6 +31,7 @@ class MenuDetailForm extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('Caption, Description', 'required'),
+			array('Caption', 'unique', 'on'=>'insert'),
 			array('Caption, Link, IconCSS', 'length', 'max'=>250),
 			array('Description', 'length', 'max'=>500),
 			array('Enable', 'boolean'),
@@ -263,27 +264,19 @@ class MenuDetailForm extends CActiveRecord
 	/**
 	 * Function for get list parent menu, return menu id and caption
 	 * @param int $MenuId, select all menu list except given menuid
+	 * @param int $id, menuid which want to find
 	*/
-	public function getParentMenuList($MenuId){
+	public function getParentMenuList($MenuId, $id){
 		$connection=Yii::app()->db;
 		$connection->active=true;
 	
 		try
 		{ 
-			$sql = "call spr_get_parentmenulist (".$MenuId.")";
+			$sql = "call spr_get_parentmenulist (".$MenuId.", ".$id.")";
 			$command=$connection->createCommand($sql);
 			$dataReader=$command->query();
-			$id = array();
-			$text = array();
-			
-			$id[] = 0;
-			$text[] = '';
-
-			while(($row=$dataReader->read())!==false){
-				$id[] = $row['MenuId'];
-				$text[] = $row['Caption'];
-			}
-			return array_combine($id, $text);
+			$rows=$dataReader->readAll();
+			return $rows;
 		}
 		catch(Exception $e)
 		{

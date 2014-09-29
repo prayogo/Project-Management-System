@@ -20,68 +20,83 @@ $this->breadcrumbs=array(
     <table class="table hovered dataTable" id="dataTables-1" style="width:100%;">
       <thead>
         <tr>
+          <th class="text-left">MenuId</th>	
           <th class="text-left">Menu</th>
           <th class="text-left">Link</th>
           <th class="text-left">Parent</th>
+          <th class="text-left">ParentId</th>
           <th class="text-left">Enable</th>
           <th class="text-left">Action</th>
         </tr>
       </thead>
-      <tbody>
-
-      	<?php
-			if (isset($data) && count($data) > 0){
-				for($i=0; $i < count($data); $i++){
-					echo '<tr>';
-					echo '<td style="width:45rem">'.$data[$i]['Caption'].'</td>';
-					echo '<td style="width:35rem">'.$data[$i]['Link'].'</td>';
-					echo '<td style="width:25rem">'.$data[$i]['Parent'].'</td>';
-					echo '<td style="width:15rem"><input type="checkbox" disabled="true" checked="'.($data[$i]['Enable'] ? 'true' : 'false').'"></td>'; 
-					echo '<td style="width:15rem">';
-					$form=$this->beginWidget('CActiveForm', array(
-						'id'=>'update-delete-form'.$i,
-						'htmlOptions'=>array(
-							'name'=>'update-delete-form',
-						),
-					));
-echo '<a class="btn-link" style="padding-left:0px; padding-right:2px" href="'.Yii::app()->createUrl('menu/managemenu',array('id'=>$data[$i]['MenuId'])).'"><span class="glyphicon glyphicon-pencil"></span></a> 
-	<a class="btn-link delete" style="padding-left:0px; padding-right:2px"><span class="glyphicon glyphicon-trash"></span></a>';
-						$model->MenuId = $data[$i]['MenuId'];
-					echo $form->hiddenField($model,'MenuId');
-					$this->endWidget();				
-					echo '</td>';
-					echo '</tr>';
-				}
-			}
-		?>
-      </tbody>
     </table>
+    <?php 
+		echo CHtml::beginForm(); 
+							
+		echo CHtml::endForm();
+	?>
+
     <script src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.dataTables.js"></script> 
     
     <script>
-		$(function(){
-			$('#dataTables-1').dataTable();
-		});
 		
-		$('.delete').click(function(e){
-			bootbox.dialog({
-			  message: "Are you sure want to delete?",
-			  title: "<span class='glyphicon glyphicon-question-sign'></span> Delete Menu",
-			  buttons: {
-				 cancel: {
-					label: "Cancel",
-					className: "btn-default",
-				},
-				main: {
-				  label: "OK",
-				  className: "btn-primary",
-				  callback: function() {
-					$('form[name="update-delete-form"]').submit();
-				  }
+		$(function(){
+			var siteUrl ='<?php echo Yii::app()->request->baseUrl;?>/um/GetMenuList/ajax/1';
+			$('#dataTables-1').dataTable({
+				"order": [[ 4, "asc" ], [ 1, "asc"]],
+				'bProcessing': true,
+				'sAjaxSource': siteUrl,
+                'aoColumns': [
+					{ 'mData': 'MenuId' },
+                    { 'mData': 'Caption' },
+                    { 'mData': 'Link' },
+                    { 'mData': 'Parent' },
+					{ 'mData': 'ParentId' },
+                    { 'mData': 'Enable' },
+				],
+				'aoColumnDefs': [
+				 	{ 
+						'aTargets': [ 5 ],
+      					'mData': 'Enable',
+						'mRender': function ( data, type, full ) {
+							var checked = data == 0 ? "" : "checked";
+							return '<input type="checkbox" '+checked+' disabled="true"/>';
+						}
+            		},
+					{ 
+						'aTargets': [ 6 ],
+      					'mData': 'MenuId',
+						'mRender': function ( data, type, full ) {
+							var editUrl ='<?php echo Yii::app()->createUrl('menu/managemenu',array('id'=>'')) ?>' + '/' + data;
+							var deleteUrl = '<?php echo Yii::app()->createUrl('um/menu') ?>';
+							return '<form method="POST" action="'+deleteUrl+'" name="update-delete-form"><a class="btn-link" style="padding-left:0px; padding-right:2px" href="'+editUrl+'"><span class="glyphicon glyphicon-pencil"></span></a> <a class="btn-link delete" style="padding-left:0px; padding-right:2px"><span class="glyphicon glyphicon-trash"></span></a><input type="hidden" value="'+data+'" name="MenuDetailForm[MenuId]" /></form>';
+						}
+            		},
+            		{ 'visible': false,  'targets': [ 0, 4 ] }
+        		],
+				'fnInitComplete':function(){
+					$('.delete').click(function(e){
+						bootbox.dialog({
+						  message: "Are you sure want to delete?",
+						  title: "<span class='glyphicon glyphicon-question-sign'></span> Delete Menu",
+						  buttons: {
+							 cancel: {
+								label: "Cancel",
+								className: "btn-default",
+							},
+							main: {
+							  label: "OK",
+							  className: "btn-primary",
+							  callback: function() {
+								$($(e)[0].currentTarget).closest('form').submit();
+							  }
+							}
+						  }
+						});
+						event.preventDefault();
+					});
 				}
-			  }
 			});
-			event.preventDefault();
 		});
 	</script> 
   </div>

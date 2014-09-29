@@ -23,19 +23,27 @@ class MenuController extends Controller
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
-				
+		
+		var_dump($_POST);		
+		
 		// menu detail form POST
-		if(isset($_POST['MenuDetailForm']) && isset($_POST['ParentId']))
+		if(isset($_POST['MenuDetailForm']))
 		{
 			$model->attributes=$_POST['MenuDetailForm'];
+			$model->MenuId = $_POST['MenuDetailForm']['MenuId'];
+			if ($model->MenuId != null && $model->MenuId != ""){
+				$model->setScenario('update');
+			}else{
+				$model->setScenario('insert');
+			}
+
 			if($model->validate())
 			{
-				$model->MenuId = $_POST['MenuDetailForm']['MenuId'];
 				$model->Caption = $_POST['MenuDetailForm']['Caption'];
 				$model->Link = $_POST['MenuDetailForm']['Link'];
 				$model->IconCSS = $_POST['MenuDetailForm']['IconCSS'];
 				$model->Description = $_POST['MenuDetailForm']['Description'];
-				$model->ParentId = $_POST['ParentId'];
+				$model->ParentId = $_POST['MenuDetailForm']['ParentId'];
 				$model->Enable = $_POST['MenuDetailForm']['Enable'];
 				if ($model->MenuId != null && $model->MenuId != ""){
 					$response = $model->getMenuDetail($model->MenuId);
@@ -48,12 +56,7 @@ class MenuController extends Controller
 						}
 					}
 					else{
-						$response1 = $model->insertMenu($model->Caption, $model->Link, $model->IconCSS, $model->Description, $model->ParentId, $model->Enable);
-						if ($response1['code'] == StandardVariable::CONSTANT_RETURN_SUCCESS){
-							$this->redirect(array('um/menu'));
-						}else{
-							$model->addError('request', $response1['exception'][2]);
-						}
+						$model->addError('request', 'Menu not exists!');
 					}
 				}
 				else{
@@ -75,17 +78,33 @@ class MenuController extends Controller
 					  $model->Link = $response[0]['Link'];
 					  $model->IconCSS = $response[0]['IconCSS'];
 					  $model->Description = $response[0]['Description'];
+					  $model->ParentId = $response[0]['ParentId'];
 					  $model->Enable = $response[0]['Enable'];
 				  }
 			}	
 		}
-		
-		if (isset($model->MenuId) && $model->MenuId != null && $model->MenuId != ""){
-			$parentList = $model->getParentMenuList($model->MenuId);	
-		}else{
-			$parentList = $model->getParentMenuList(0);
-		}
 
-		$this->render('managemenu', array('model'=>$model, 'data'=>$parentList));
+		$this->render('managemenu', array('model'=>$model));
+	}
+	
+	public function actionGetParentMenuList(){
+		$model=new MenuDetailForm;
+		$parentList = "";
+		$id = "NULL";
+		if (isset($_POST['ajax']) && $_POST['ajax'] != null && $_POST['ajax'] != ""){
+			if (isset($_POST['menuid']) && $_POST['menuid'] != null && $_POST['menuid'] != ""){
+				if (isset($_POST['id']) && $_POST['id'] != null && $_POST['id'] != ""){
+					$id = $_POST['id'];
+					$parentList = $model->getParentMenuList($_POST['menuid'], $id);
+				}else{
+					$parentList = $model->getParentMenuList($_POST['menuid'], $id);
+					array_unshift($parentList, array('MenuId'=>'0', 'Caption'=>''));
+				}
+			}else{
+				$parentList = $model->getParentMenuList(0, $id);
+				array_unshift($parentList, array('MenuId'=>'0', 'Caption'=>''));
+			}
+		}
+		echo json_encode($parentList);
 	}
 }

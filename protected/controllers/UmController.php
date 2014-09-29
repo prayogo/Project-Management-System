@@ -24,7 +24,6 @@ class UmController extends Controller
 	public function actionMenu()
 	{
 		$model=new MenuDetailForm;
-		
 		if (isset($_POST['MenuDetailForm'])){
 			if ($_POST['MenuDetailForm']['MenuId'] != null && $_POST['MenuDetailForm']['MenuId'] != ""){
 				$response1 = $model->deleteMenu($_POST['MenuDetailForm']['MenuId']);
@@ -40,8 +39,20 @@ class UmController extends Controller
 			$model->addError('request', $response['exception'][2]);	
 		}
 		
-		$response = $model->getMenuList();
-		$this->render('menu', array('model'=>$model, 'data'=>$response));
+		$this->render('menu', array('model'=>$model));
+	}
+	
+	public function actionGetMenuList(){
+		if(isset($_GET['ajax']))
+		{
+			$model=new MenuDetailForm;
+			$response = $model->getMenuList();
+			$data = new stdClass();
+			$data->data = $response;
+			echo(json_encode($data));	
+		}else{
+			$this->redirect(array('um/menu'));
+		}
 	}
 
 
