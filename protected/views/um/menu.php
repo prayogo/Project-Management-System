@@ -22,7 +22,7 @@ $this->breadcrumbs=array(
         <tr>
           <th class="text-left">Menu</th>
           <th class="text-left">Link</th>
-          <th class="text-left">Icon</th>
+          <th class="text-left">Parent</th>
           <th class="text-left">Enable</th>
           <th class="text-left">Action</th>
         </tr>
@@ -35,7 +35,7 @@ $this->breadcrumbs=array(
 					echo '<tr>';
 					echo '<td style="width:45rem">'.$data[$i]['Caption'].'</td>';
 					echo '<td style="width:35rem">'.$data[$i]['Link'].'</td>';
-					echo '<td style="width:25rem">'.$data[$i]['IconCSS'].'</td>';
+					echo '<td style="width:25rem">'.$data[$i]['Parent'].'</td>';
 					echo '<td style="width:15rem"><input type="checkbox" disabled="true" checked="'.($data[$i]['Enable'] ? 'true' : 'false').'"></td>'; 
 					echo '<td style="width:15rem">';
 					$form=$this->beginWidget('CActiveForm', array(
@@ -44,8 +44,8 @@ $this->breadcrumbs=array(
 							'name'=>'update-delete-form',
 						),
 					));
-echo '<button type="submit" class="btn-link" style="padding-left:0px; padding-right:2px"><span class="glyphicon glyphicon-pencil"></span></button> 
-	<button type="submit" class="btn-link delete" style="padding-left:0px; padding-right:2px"><span class="glyphicon glyphicon-trash"></span></button>';
+echo '<a class="btn-link" style="padding-left:0px; padding-right:2px" href="'.Yii::app()->createUrl('menu/managemenu',array('id'=>$data[$i]['MenuId'])).'"><span class="glyphicon glyphicon-pencil"></span></a> 
+	<a class="btn-link delete" style="padding-left:0px; padding-right:2px"><span class="glyphicon glyphicon-trash"></span></a>';
 						$model->MenuId = $data[$i]['MenuId'];
 					echo $form->hiddenField($model,'MenuId');
 					$this->endWidget();				
@@ -61,6 +61,27 @@ echo '<button type="submit" class="btn-link" style="padding-left:0px; padding-ri
     <script>
 		$(function(){
 			$('#dataTables-1').dataTable();
+		});
+		
+		$('.delete').click(function(e){
+			bootbox.dialog({
+			  message: "Are you sure want to delete?",
+			  title: "<span class='glyphicon glyphicon-question-sign'></span> Delete Menu",
+			  buttons: {
+				 cancel: {
+					label: "Cancel",
+					className: "btn-default",
+				},
+				main: {
+				  label: "OK",
+				  className: "btn-primary",
+				  callback: function() {
+					$('form[name="update-delete-form"]').submit();
+				  }
+				}
+			  }
+			});
+			event.preventDefault();
 		});
 	</script> 
   </div>

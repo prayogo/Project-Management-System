@@ -9,6 +9,7 @@
  * @property string $Link
  * @property string $IconCSS
  * @property string $Description
+ * @property int $ParentId
  * @property boolean $Enable
  */
 class MenuDetailForm extends CActiveRecord
@@ -33,9 +34,10 @@ class MenuDetailForm extends CActiveRecord
 			array('Caption, Link, IconCSS', 'length', 'max'=>250),
 			array('Description', 'length', 'max'=>500),
 			array('Enable', 'boolean'),
+			array('ParentId', 'numerical','integerOnly'=>true),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('MenuId, Caption, Link, IconCSS, Description, Enable', 'safe', 'on'=>'search'),
+			array('MenuId, Caption, Link, IconCSS, Description, ParentId, Enable', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -61,6 +63,7 @@ class MenuDetailForm extends CActiveRecord
 			'Link' => 'Link',
 			'IconCSS' => 'Icon',
 			'Description' => 'Description',
+			'ParentId' => 'ParentId',
 			'Enable' => 'Enable',
 		);
 	}
@@ -88,6 +91,7 @@ class MenuDetailForm extends CActiveRecord
 		$criteria->compare('Link',$this->Link,true);
 		$criteria->compare('IconCSS',$this->IconCSS,true);
 		$criteria->compare('Description',$this->Description,true);
+		$criteria->compare('ParentId',$this->ParentId);
 		$criteria->compare('Enable',$this->Enable,true);
 
 		return new CActiveDataProvider($this, array(
@@ -111,9 +115,10 @@ class MenuDetailForm extends CActiveRecord
 	 * @param string $Link, menu link address.
 	 * @param string $Icon, icon css class name.
 	 * @param string $Description, menu description.
+	 * @param int $ParentId, menu parent id
 	 * @param boolean $Enable, enable/disable menu.
 	*/
-	public function insertMenu($Caption, $Link, $Icon, $Description, $Enable)
+	public function insertMenu($Caption, $Link, $Icon, $Description, $ParentId, $Enable)
 	{
 		$response = array('code'=>'', 'exception'=>'');
 		$connection=Yii::app()->db;
@@ -124,7 +129,7 @@ class MenuDetailForm extends CActiveRecord
 		try
 		{ 
 			$sql = "call Spr_Insert_Menu ('".$Caption."', '".$Link."', '".$Icon."', 
-				'".$Description."', '".$Enable."', '".$username."')";
+				'".$Description."',".$ParentId.",'".$Enable."', '".$username."')";
 			$command=$connection->createCommand($sql);
 			$status=$command->execute();
 		   	$transaction->commit();
@@ -203,11 +208,10 @@ class MenuDetailForm extends CActiveRecord
 		$transaction=$connection->beginTransaction();
 		try
 		{ 
-			$sql = "call Spr_Delete_Menu (".$MenuId.",'".$username."')";
+			$sql = "call Spr_Delete_Maenu (".$MenuId.",'".$username."')";
 			$command=$connection->createCommand($sql);
 			$status=$command->execute();
 		   	$transaction->commit();
-			var_dump($status);
 		   	$response['code'] = StandardVariable::CONSTANT_RETURN_SUCCESS;
 		}
 		catch(Exception $e)
@@ -218,5 +222,75 @@ class MenuDetailForm extends CActiveRecord
 		}
 		
 		return $response;
+	}
+	
+	/**
+	 * Function for update menu
+	 * @param string $MenuId.
+	 * @param string $Caption, menu caption.
+	 * @param string $Link, menu link address.
+	 * @param string $Icon, icon css class name.
+	 * @param string $Description, menu description.
+	 * @param int $ParentId, menu parent id
+	 * @param boolean $Enable, enable/disable menu.
+	*/
+	public function updateMenu($MenuId, $Caption, $Link, $Icon, $Description, $ParentId, $Enable)
+	{
+		$response = array('code'=>'', 'exception'=>'');
+		$connection=Yii::app()->db;
+		$connection->active=true;
+		$username=GlobalFunction::getLoginUserName();
+		
+		$transaction=$connection->beginTransaction();
+		try
+		{ 
+			$sql = "call Spr_Update_Menu (".$MenuId.",'".$Caption."','".$Link."','".$Icon."','".$Description."',".$ParentId.",'".$Enable."','".$username."')";
+			$command=$connection->createCommand($sql);
+			$status=$command->execute();
+		   	$transaction->commit();
+		   	$response['code'] = StandardVariable::CONSTANT_RETURN_SUCCESS;
+		}
+		catch(Exception $e)
+		{
+			$response['code'] = StandardVariable::CONSTANT_RETUNN_ERROR;
+			$response['exception'] = $e->errorInfo;
+		   	$transaction->rollback();
+		}
+		
+		return $response;
+	}
+	
+	/**
+	 * Function for get list parent menu, return menu id and caption
+	 * @param int $MenuId, select all menu list except given menuid
+	*/
+	public function getParentMenuList($MenuId){
+		$connection=Yii::app()->db;
+		$connection->active=true;
+	
+		try
+		{ 
+			$sql = "call spr_get_parentmenulist (".$MenuId.")";
+			$command=$connection->createCommand($sql);
+			$dataReader=$command->query();
+			$id = array();
+			$text = array();
+			
+			$id[] = 0;
+			$text[] = '';
+
+			while(($row=$dataReader->read())!==false){
+				$id[] = $row['MenuId'];
+				$text[] = $row['Caption'];
+			}
+			return array_combine($id, $text);
+		}
+		catch(Exception $e)
+		{
+			$response = array('code'=>'', 'exception'=>'');
+			$response['code'] = StandardVariable::CONSTANT_RETUNN_ERROR;
+			$response['exception'] = $e->errorInfo;
+			return $response;
+		}
 	}
 }

@@ -26,7 +26,8 @@
 		echo $form->errorSummary($model);
 		?>
        
-        <?php $model->MenuId ?>
+        <?php echo $form->hiddenField($model,'MenuId') ?>
+        <?php echo $form->hiddenField($model,'ParentId') ?>
         <div class="form-group">
             <div class="col-1"><span class="pull-right"></span></div>
             <?php echo $form->labelEx($model,'Caption', array('class'=>'control-label col-lg-2')); ?>
@@ -62,7 +63,25 @@
            
             </div>
         </div>
-        
+        <div class="form-group">
+	        <div class="col-1"><span class="pull-right"></span></div>
+            <label class="control-label col-lg-2">Parent</label>
+	        <div class="col-lg-6">
+            <?php
+			$this->widget(
+    'booster.widgets.TbSelect2',
+    array(
+        'name' => 'ParentId',
+		'data' => $data,
+        'options' => array(
+            'placeholder' => '',
+            'width' => '100%',
+        )
+    )
+);
+			?>
+            </div>
+        </div>
    		<div class="form-group">
 			<div class="col-1"><span class="pull-right"></span></div>
             	<?php echo $form->labelEx($model,'Enable', array('class'=>'control-label col-lg-2')); ?>
