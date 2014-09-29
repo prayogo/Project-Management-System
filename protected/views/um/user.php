@@ -6,14 +6,19 @@ $this->breadcrumbs=array(
 	'User',
 );
 ?>
+
+<h1 class="blok" style="padding: 8px 15px;background-color: #f5f5f5;margin-bottom: 20px;">
+  <i class="fi-torso-business"></i> Users
+</h1>
+
 <?php 
   echo CHtml::errorSummary($model);
 ?>
-<h1 class="blok"><i class="fi-torso-business"></i> Users</h1>
-<div class="blok">
+<div class="panel panel-default">
+  <div class="panel-heading">
       <a class="btn btn-default" style="margin-bottom:0px" href="<?php echo Yii::app()->createUrl('user/manageuser') ?>"><i class="fi-plus"></i> Add New User</a>
-  <hr />
-  <div class="metro">
+  </div>
+  <div class="metro panel-body">
     <table class="table striped hovered dataTable" id="dataTables-1" style="width:100%;">
       <thead>
         <tr>

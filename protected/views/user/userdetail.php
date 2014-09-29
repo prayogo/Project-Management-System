@@ -89,16 +89,16 @@
             <?php echo $form->labelEx($model,'Copy_User', array('class'=>'control-label col-lg-2')); ?>
         </div>
 		<div class="col-lg-6" style="margin-top:5px">
-	        <?php echo $form->CheckBox($model,'Copy_User',array('class'=>'check')); ?>
+	        <?php echo $form->CheckBox($model,'Copy_User',array('class'=>'check','onclick'=>'enabled_form($(\'.check\'));')); ?>
 		</div>
     </div>
 
-    <div class="form-group" >
+    <div class="form-group enable_form" style="display:none;">
         <div class="col-1"><span class="pull-right"></span>
             <?php echo $form->labelEx($model,'User', array('class'=>'control-label col-lg-2')); ?>
         </div>
 		<div class="col-lg-6" style="margin-top:5px">
-	        <?php echo $form->TextField($model,'User', array('class'=>'form-control','enabled'=>'enabled')); ?>
+	        <?php echo $form->TextField($model,'User', array('class'=>'form-control')); ?>
 		</div>
     </div>
 
@@ -126,4 +126,10 @@
 		</div><!-- form -->
 	</div>
 </div>
+
+<script>
+	function enabled_form(id){
+		$('.enable_form').css('display', id.attr('checked') ? '' :'none');
+	}
+</script>
 
