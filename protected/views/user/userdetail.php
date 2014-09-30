@@ -22,10 +22,10 @@
 			$form->error($model,'Email');
 			$form->error($model,'Phone');
 			$form->error($model,'Password');
-			
-		echo $form->errorSummary($model);
+	       
+		echo $form->errorSummary($model);        
 	?>
-	<?php $model->UserId ?>
+	<?php echo $form->hiddenField($model,'UserId') ?>
 	<!-- <p class="note">Fields with <span class="required">*</span> are required.</p> -->
 
 
@@ -34,7 +34,7 @@
         	<?php echo $form->labelEx($model,'Username', array('class'=>'control-label col-lg-2')); ?>
         </div>
         <div class="col-lg-6">
-        	<?php echo $form->textField($model,'Username', array('class'=>'form-control')); ?>        
+        	<?php echo $form->textField($model,'Username', array('class'=>'form-control', (isset($model->UserId) && $model->UserId != "") ? ", 'disabled' => 'disabled'" : '')) ;?>
         </div>
     </div>
 
@@ -97,7 +97,7 @@
             <?php echo $form->labelEx($model,'User', array('class'=>'control-label col-lg-2')); ?>
         </div>
 		<div class="col-lg-6" style="margin-top:5px">	        
-            <?php $this->widget('booster.widgets.TbSelect2', array('name' => 'User', 'data' => $data,'options' => array('placeholder' => '','width' => '100%',))); ?>
+            <?php echo $form->hiddenField($model,'User', array('class'=>'User', 'style'=>'width:100%')); ?>
 		</div>
     </div>
 
@@ -112,11 +112,11 @@
     
 	<div class="panel-footer">
 		<div>
-	        <button class="btn btn-default">
-	            <i class="glyphicon glyphicon-remove" style="display:block;font-size:26px;"></i>Cancel
-	        </button>
+	        <a class="btn btn-default" href="<?php echo Yii::app()->createUrl('um/user') ?>">
+	           <i class="glyphicon glyphicon-remove" style="display:block;font-size:26px;"></i>Cancel
+	        </a>
 	        <button type="submit" class="btn btn-default pull-right">
-	            <i class="glyphicon glyphicon-floppy-disk" style="display:block;font-size:26px;"></i>Save
+	           <i class="glyphicon glyphicon-floppy-disk" style="display:block;font-size:26px;"></i>Save
 	        </button>
 	    </div>
 	</div>
@@ -127,9 +127,47 @@
 	</div>
 </div>
 
+<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/js/select2/select2.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/js/select2/select2-bootstrap.css" />
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/js/select2/select2.js"></script>
+
 <script>
 	function enabled_form(id){
 		$('.enable_form').css('display', id.attr('checked') ? '' :'none');
 	}
+
+    $(".User").select2({
+        placeholder: '',
+        query: function(query) {
+            $.ajax({
+                url: "<?php echo Yii::app()->request->baseUrl;?>/user/GetUserList", 
+                data: { ajax: 1, userid: <?php echo (isset($model->UserId) && $model->UserId != "") ? $model->UserId : 0 ?>, },
+                dataType: 'json',
+                type: "POST",
+                success: function(data) {
+                    var data1 = $.map(data, function (item) {
+                        return {
+                            text: item.Username,
+                            id: item.UserId
+                        }
+                    });
+                    query.callback({results: data1});
+                }
+            })
+        },
+        initSelection: function(element, callback) {
+            var id = $(element).val();
+            if(id !== "") {
+                $.ajax("http://localhost/Project-Management-System/user/GetUserList", {
+                    data: {id: id, ajax: 1, userid: <?php echo (isset($model->UserId) && $model->UserId != "") ? $model->UserId : 0 ?>},
+                    dataType: "json", type: "POST"
+                }).done(function(data) {
+                    if (data.length > 0){
+                        callback({"text":data[0].Username});
+                    }
+                });
+            }
+        }
+    });
 </script>
 

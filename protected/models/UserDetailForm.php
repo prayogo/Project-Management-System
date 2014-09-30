@@ -39,20 +39,19 @@ class UserDetailForm extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('Username, Name, Email, Phone, Password, Confirm_Password', 'required'),
-			array('Username, Password, Confirm_Password, UserIn, UserUp', 'length', 'max'=>50),
+			array('Username, Password, Confirm_Password', 'length', 'max'=>50),
 			array('Name', 'length', 'max'=>250),
 			array('Email', 'length', 'max'=>150),			
 			array('Phone', 'length', 'max'=>20),			
 			array('Enable', 'boolean'),
 			array('Password','compare','compareAttribute'=>'Confirm_Password'),
 			array('Email', 'email'),
-			array('Username','unique'),
-			array('Email','unique'),
+			array('Username','unique','on'=>'insert'),
+			array('Email','unique','on'=>'insert'),
 			array('Phone', 'numerical','integerOnly'=>true),
-			array('DateIn, DateUp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('UserId, Username, Name, Email, Phone, Password, Enable, UserIn, DateIn, UserUp, DateUp', 'safe', 'on'=>'search'),
+			array('UserId, Username, Name, Email, Phone, Password, Enable', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -80,12 +79,8 @@ class UserDetailForm extends CActiveRecord
 			'Phone' => 'Phone',
 			'Password' => 'Password',
 			'Confirm_Password' => 'Confirm Password',
-			'Copy_User' => 'Copy Existing User',
+			'Copy_User' => 'Copy User Access',
 			'Enable' => 'Enable',
-			'UserIn' => 'User In',
-			'DateIn' => 'Date In',
-			'UserUp' => 'User Up',
-			'DateUp' => 'Date Up',
 			'User' => 'User',
 		);
 	}
@@ -115,10 +110,6 @@ class UserDetailForm extends CActiveRecord
 		$criteria->compare('Phone',$this->Phone,true);
 		$criteria->compare('Password',$this->Password,true);
 		$criteria->compare('Enable',$this->Enable,true);
-		$criteria->compare('UserIn',$this->UserIn,true);
-		$criteria->compare('DateIn',$this->DateIn,true);
-		$criteria->compare('UserUp',$this->UserUp,true);
-		$criteria->compare('DateUp',$this->DateUp,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -186,49 +177,16 @@ class UserDetailForm extends CActiveRecord
 	}
 
 	/**
-	 * Function for get list user, return user id and username
-	 * select all user list for drop down list
-	*/
-	public function getUserListDDL(){
-		$connection=Yii::app()->db;
-		$connection->active=true;
-	
-		try
-		{ 
-			$sql = "call Spr_Get_UserList()";
-			$command=$connection->createCommand($sql);
-			$dataReader=$command->query();
-			$id = array();
-			$text = array();
-			
-			$id[] = 0;
-			$text[] = '';
-
-			while(($row=$dataReader->read())!==false){
-				$id[] = $row['UserId'];
-				$text[] = $row['Username'];
-			}
-			return array_combine($id, $text);
-		}
-		catch(Exception $e)
-		{
-			$response = array('code'=>'', 'exception'=>'');
-			$response['code'] = StandardVariable::CONSTANT_RETUNN_ERROR;
-			$response['exception'] = $e->errorInfo;
-			return $response;
-		}
-	}
-
-	/**
 	 * Function for insert user detail
 	 * @param string $Username, username.
 	 * @param string $Name, name.
 	 * @param string $Email, email.
 	 * @param string $Phone, phone.
-	 * @param int $Password, password
+	 * @param string $Password, password
 	 * @param boolean $Enable, enable/disable menu.
+	 * @param int $UserId, Source User Id.
 	*/
-	public function insertUser($Username, $Name, $Email, $Phone, $Password, $Enable)
+	public function insertUser($Username, $Name, $Email, $Phone, $Password, $Enable, $UserId)
 	{
 		$response = array('code'=>'', 'exception'=>'');
 		$connection=Yii::app()->db;
@@ -239,7 +197,43 @@ class UserDetailForm extends CActiveRecord
 		try
 		{ 
 			$sql = "call Spr_Insert_User ('".$Username."', '".$Name."', '".$Email."', 
-				'".$Phone."',".$Password.",'".$Enable."', '".$userin."')";
+				'".$Phone."','".$Password."','".$Enable."', '".$userin."')";
+			$command=$connection->createCommand($sql);
+			$status=$command->execute();
+			
+			if(isset($UserId) && $UserId != null && $UserId != ""){
+				copyUserAccess($Username, $UserId, $transaction);
+			}
+			
+		   	$transaction->commit();
+		   	$response['code'] = StandardVariable::CONSTANT_RETURN_SUCCESS;
+		}
+		catch(Exception $e)
+		{
+			$response['code'] = StandardVariable::CONSTANT_RETUNN_ERROR;
+			$response['exception'] = $e->errorInfo;			
+		   	$transaction->rollback();
+		}
+		
+		return $response;
+	}
+
+	/**
+	 * Function for copy user access
+	 * @param string $Username, destination username.
+	 * @param int $UserId, source user.
+	 * @param object $transaction, Sql Transaction.
+	*/
+	public function copyUserAccess($Username, $UserId, $transaction)
+	{
+		$response = array('code'=>'', 'exception'=>'');
+		$connection=Yii::app()->db;
+		$connection->active=true;
+		$userin=GlobalFunction::getLoginUserName();
+		
+		try
+		{ 
+			$sql = "call Spr_Copy_User_Access ('".$Username."', ".$UserId.", '".$userin."')";
 			$command=$connection->createCommand($sql);
 			$status=$command->execute();
 		   	$transaction->commit();
@@ -248,7 +242,7 @@ class UserDetailForm extends CActiveRecord
 		catch(Exception $e)
 		{
 			$response['code'] = StandardVariable::CONSTANT_RETUNN_ERROR;
-			$response['exception'] = $e->errorInfo;
+			$response['exception'] = $e->errorInfo;			
 		   	$transaction->rollback();
 		}
 		

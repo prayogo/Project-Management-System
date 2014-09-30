@@ -21,7 +21,7 @@ $this->breadcrumbs=array(
               $tab1 => array(                
                   'title'=>'User Detail', 
                   'view'=>'userdetail',
-                  'data'=>array('model'=>$model, 'data'=>$data),
+                  'data'=>array('model'=>$model),
               ), 
               $tab2 => array(                
                   'title'=>'User Access',
