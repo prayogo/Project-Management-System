@@ -52,7 +52,7 @@ class UmController extends Controller
 	}
 	
 	public function actionGetMenuList(){
-		if(isset($_GET['ajax']))
+		if(isset($_POST['ajax']))
 		{
 			$model=new MenuDetailForm;
 			$response = $model->getMenuList();
@@ -61,7 +61,7 @@ class UmController extends Controller
 			}
 			$data = new stdClass();
 			$data->data = $response;
-			echo(json_encode($data));	
+			echo(json_encode($response));	
 		}else{
 			$this->redirect(array('um/menu'));
 		}
