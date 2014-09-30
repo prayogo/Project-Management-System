@@ -19,38 +19,85 @@ $this->breadcrumbs=array(
       <a class="btn btn-default" style="margin-bottom:0px" href="<?php echo Yii::app()->createUrl('user/manageuser') ?>"><i class="fi-plus"></i> Add New User</a>
   </div>
   <div class="metro panel-body">
-    <table class="table striped hovered dataTable" id="dataTables-1" style="width:100%;">
+    <table class="table hovered dataTable" id="dataTables-1" style="width:100%;">
       <thead>
         <tr>
+          <th class="text-left">UserId</th>
           <th class="text-left">Username</th>
           <th class="text-left">Name</th>
           <th class="text-left">Email</th>
           <th class="text-left">Phone</th>
           <th class="text-left">Enable</th>
+          <th class="text-left">Action</th>
         </tr>
       </thead>
-      <tbody>
-        <?php
-          if (count($data) > 0){
-            for($i=0; $i < count($data); $i++){
-              echo '<tr>';
-              echo '<td style="width:20rem">'.$data[$i]['Username'].'</td>';
-              echo '<td style="width:30rem">'.$data[$i]['Name'].'</td>';
-              echo '<td style="width:15rem">'.$data[$i]['Email'].'</td>';
-              echo '<td style="width:15rem">'.$data[$i]['Phone'].'</td>';
-              echo '<td style="width:10rem"><input type="checkbox" disabled="true" checked="'.($data[$i]['Enable'] ? 'true' : 'false').'"></td>';
-              echo '</tr>';
-            }
-          }
-        ?>
-      </tbody>
     </table>
+
+    <?php 
+      echo CHtml::beginForm();
+      echo CHtml::endForm();
+    ?>
     <script src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.dataTables.js"></script> 
     
-    <script>
-		$(function(){
-			$('#dataTables-1').dataTable();
-		});
-	</script> 
+  <script>    
+    $(function(){
+      var siteUrl ='<?php echo Yii::app()->request->baseUrl;?>/um/GetUserList/ajax/1';
+      $('#dataTables-1').dataTable({
+        "order": [ 2, "asc"],
+        'bProcessing': true,
+        'sAjaxSource': siteUrl,
+        'aoColumns': [
+            { 'mData': 'UserId' },
+            { 'mData': 'Username' },
+            { 'mData': 'Name' },
+            { 'mData': 'Email' },
+            { 'mData': 'Phone' },
+            { 'mData': 'Enable' },
+        ],
+        'aoColumnDefs': [
+          { 
+            'aTargets': [ 5 ],
+            'mData': 'Enable',
+            'mRender': function ( data, type, full ) {
+              var checked = data == 0 ? "" : "checked";
+              return '<input type="checkbox" '+checked+' disabled="true"/>';
+            }
+          },
+          { 
+            'aTargets': [ 6 ],
+            'mData': 'UserId',
+            'mRender': function ( data, type, full ) {
+              var editUrl ='<?php echo Yii::app()->createUrl('user/manageuser',array('id'=>'')) ?>' + '/' + data;
+              var deleteUrl = '<?php echo Yii::app()->createUrl('um/user') ?>';
+              return '<form method="POST" action="'+deleteUrl+'" name="update-delete-form"><a class="btn-link" style="padding-left:0px; padding-right:2px" href="'+editUrl+'"><span class="glyphicon glyphicon-pencil"></span></a> <a class="btn-link delete" style="padding-left:0px; padding-right:2px"><span class="glyphicon glyphicon-trash"></span></a><input type="hidden" value="'+data+'" name="UserDetailForm[UserId]" /></form>';
+            }
+          },
+          { 'visible': false,  'targets': [ 0 ] }
+        ],
+        'fnInitComplete':function(){
+          $('.delete').click(function(e){
+            bootbox.dialog({
+              message: "Are you sure want to delete?",
+              title: "<span class='glyphicon glyphicon-question-sign'></span> Delete User",
+              buttons: {
+               cancel: {
+                label: "Cancel",
+                className: "btn-default",
+              },
+              main: {
+                label: "OK",
+                className: "btn-primary",
+                callback: function() {
+                $($(e)[0].currentTarget).closest('form').submit();
+                }
+              }
+              }
+            });
+            event.preventDefault();
+          });
+        }
+      });
+    });
+    </script> 
   </div>
 </div>

@@ -12,13 +12,23 @@ class UmController extends Controller
 	public function actionUser()
 	{		
 		$model=new UserDetailForm;
-		$response = $model->getUserList();
-		if (isset($response['code']) && $response['code'] == 'M0'){
-			$model->addError('request', $response['exception'][2]);	
-		}else{
 
+		if (isset($_POST['UserDetailForm'])){
+			if ($_POST['UserDetailForm']['UserId'] != null && $_POST['UserDetailForm']['UserId'] != ""){
+				$response1 = $model->deleteUser($_POST['UserDetailForm']['UserId']);
+				if ($response1['code'] == StandardVariable::CONSTANT_RETURN_SUCCESS){
+					$this->refresh();
+				}else{
+					$model->addError('request', $response1['exception'][2]);
+				}
+			}
 		}
-		$this->render('user', array('model'=>$model, 'data'=>$response));
+		
+		if (isset($response['code']) && $response['code'] == StandardVariable::CONSTANT_RETUNN_ERROR){
+			$model->addError('request', $response['exception'][2]);	
+		}
+
+		$this->render('user', array('model'=>$model));
 	}
 
 	public function actionMenu()
@@ -50,6 +60,7 @@ class UmController extends Controller
 			for($i = 0; $i < count($response); $i++){
 				$response[$i]['Link'] = Yii::app()->createUrl($response[$i]['Link']);
 			}
+
 			echo(json_encode($response));	
 		}else{
 			$this->redirect(array('um/menu'));

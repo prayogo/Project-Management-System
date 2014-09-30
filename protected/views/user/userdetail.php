@@ -34,8 +34,7 @@
         	<?php echo $form->labelEx($model,'Username', array('class'=>'control-label col-lg-2')); ?>
         </div>
         <div class="col-lg-6">
-        	<?php echo $form->textField($model,'Username', array('class'=>'form-control', (isset($model->UserId) && $model->UserId != "") ? ", 'disabled' => 'disabled'" : '')) ;?>
-        </div>
+        	<?php echo $form->textField($model,'Username', array('class'=>'form-control', 'disabled' => (isset($model->UserId) && $model->UserId != "") ? 'disabled' : '')) ;?>       </div>
     </div>
 
 	<div class="form-group">
