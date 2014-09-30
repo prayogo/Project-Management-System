@@ -74,11 +74,11 @@ class UserController extends Controller
 			if (isset($paramURL) && $paramURL != null && $paramURL != ""){
 				$response = $model->getUserDetail($paramURL);
 				if (!empty($response) && isset($response[0]['UserId'])){
+					  $model->UserId = $response[0]['UserId'];
 					  $model->Username = $response[0]['Username'];
 					  $model->Name = $response[0]['Name'];
 					  $model->Email = $response[0]['Email'];
-					  $model->Phone = $response[0]['Phone'];
-					  $model->Password = $response[0]['Password'];
+					  $model->Phone = $response[0]['Phone'];					  
 					  $model->Enable = $response[0]['Enable'];
 				  }
 			}	
