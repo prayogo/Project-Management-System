@@ -30,7 +30,7 @@ $this->breadcrumbs=array(
     <script>
 		$.ajax({
 			type: "POST",
-			url: "http://localhost:8088/pms/um/GetMenuList/ajax/1",
+			url: '<?php echo Yii::app()->request->baseUrl;?>/um/GetGroupList',
 			data: {"ajax":"1"},
 			dataType: "json",
 			success: AjaxGetFieldDataSucceeded,
@@ -41,29 +41,18 @@ $this->breadcrumbs=array(
 			if (result != "[]") {
 				//instance of datatable
 				oTable = $('#dataTables-1').dataTable({
-					"order": [[ 4, "asc" ], [ 1, "asc"]],
+					"order": [[ 1, "asc"]],
 					"bProcessing": true,
 					"aaData": result,
 					//important  -- headers of the json
 					"aoColumns": [
-						{ 'mData': 'MenuId' },
-						{ 'mData': 'Caption' },
-						{ 'mData': 'Link' },
-						{ 'mData': 'Parent' },
-						{ 'mData': 'ParentId' },
+						{ 'mData': 'HGroupId' },
+						{ 'mData': 'Group' },
 						{ 'mData': 'Enable' },
 					],
 					'aoColumnDefs': [
 						{ 
-							'aTargets': [ 5 ],
-							'mData': 'Enable',
-							'mRender': function ( data, type, full ) {
-								var checked = data == 0 ? "" : "checked";
-								return '<input type="checkbox" '+checked+' disabled="true"/>';
-							}
-						},
-						{ 
-							'aTargets': [ 6 ],
+							'aTargets': [ 3 ],
 							'mData': 'MenuId',
 							'mRender': function ( data, type, full ) {
 								var editUrl ='<?php echo Yii::app()->createUrl('menu/managemenu',array('id'=>'')) ?>' + '/' + data;
@@ -71,15 +60,8 @@ $this->breadcrumbs=array(
 								return '<form method="POST" action="'+deleteUrl+'" name="update-delete-form"><a class="btn-link" style="padding-left:0px; padding-right:2px" href="'+editUrl+'"><span class="glyphicon glyphicon-pencil"></span></a> <a class="btn-link delete" style="padding-left:0px; padding-right:2px"><span class="glyphicon glyphicon-trash"></span></a><input type="hidden" value="'+data+'" name="MenuDetailForm[MenuId]" /></form>';
 							}
 						},
-						{ 
-							'aTargets': [ 2 ],
-							'mData': 'Link',
-							'mRender': function ( data, type, full ) {
-								return '<a href="'+data+'">'+data+'</a>';
-							}
-						},
-						{ 'visible': false,  'targets': [ 0, 4 ] },
-						{ 'targets': [ 5, 6 ], 'orderable': false }
+						{ 'visible': false,  'targets': [ 0 ] },
+						{ 'targets': [ 2, 3 ], 'orderable': false }
 					],
 					'fnInitComplete':function(){
 						$('.delete').click(function(e){

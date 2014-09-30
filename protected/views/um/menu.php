@@ -36,7 +36,7 @@ $this->breadcrumbs=array(
     <script>
 		$.ajax({
 			type: "POST",
-			url: "http://localhost:8088/pms/um/GetMenuList/ajax/1",
+			url: '<?php echo Yii::app()->request->baseUrl;?>/um/GetMenuList',
 			data: {"ajax":"1"},
 			dataType: "json",
 			success: AjaxGetFieldDataSucceeded,

@@ -50,14 +50,22 @@ class UmController extends Controller
 			for($i = 0; $i < count($response); $i++){
 				$response[$i]['Link'] = Yii::app()->createUrl($response[$i]['Link']);
 			}
-			$data = new stdClass();
-			$data->data = $response;
 			echo(json_encode($response));	
 		}else{
 			$this->redirect(array('um/menu'));
 		}
 	}
-
+	
+	public function actionGetGroupList(){
+		if(isset($_POST['ajax']))
+		{
+			$model=new GroupHeaderForm;
+			$response = $model->getGroupList();
+			echo(json_encode($response));	
+		}else{
+			$this->redirect(array('um/group'));
+		}	
+	}
 
 	// Uncomment the following methods and override them if needed
 	/*
