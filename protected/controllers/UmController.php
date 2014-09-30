@@ -47,6 +47,9 @@ class UmController extends Controller
 		{
 			$model=new MenuDetailForm;
 			$response = $model->getMenuList();
+			for($i = 0; $i < count($response); $i++){
+				$response[$i]['Link'] = Yii::app()->createUrl($response[$i]['Link']);
+			}
 			$data = new stdClass();
 			$data->data = $response;
 			echo(json_encode($data));	

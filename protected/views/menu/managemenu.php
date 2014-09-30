@@ -12,8 +12,6 @@ $this->breadcrumbs=array(
   <div class="metro">
     <?php
       $tab1 = 'panel2-1';
-      $tab2 = 'panel2-2';
-      $tab3 = 'panel2-3';
        
       $this->widget('CTabView',array(
           'tabs'=>array(
@@ -22,14 +20,6 @@ $this->breadcrumbs=array(
                   'view'=>'menudetail',
 				  'data'=>array('model'=>$model),
               ), 
-              $tab2 => array(                
-                  'title'=>'Menu User',
-                  'view'=>'menuuser'
-              ),
-              $tab3 => array(                
-                  'title'=>'Menu Group',
-                  'view'=>'menugroup'
-              ),
           ),
           'cssFile'=>false,        
       ));

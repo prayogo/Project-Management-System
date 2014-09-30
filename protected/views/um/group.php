@@ -6,7 +6,9 @@ $this->breadcrumbs=array(
 	'Group',
 );
 ?>
-<h1 class="blok"><i class="fi-torso-business"></i> Groups</h1>
+<h1 class="blok" style="padding: 8px 15px;background-color: #f5f5f5;margin-bottom: 20px;">
+	<i class="fi-torso-business"></i> Groups
+</h1>
 <div class="blok">
   <div class="row collapse" style="margin-top:5px">
     <div class="columns" style="width:auto; float:left; margin-right: 10px">    

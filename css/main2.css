@@ -326,3 +326,8 @@ table{
 	border-top:2px solid #ddd;
 	border-bottom:2px solid #ddd;
 }
+.yiiTab .panel-default{
+	border-top: none;
+	border-top-left-radius: 0px;
+	border-top-right-radius: 2px;
+}

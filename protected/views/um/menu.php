@@ -72,6 +72,13 @@ $this->breadcrumbs=array(
 							return '<form method="POST" action="'+deleteUrl+'" name="update-delete-form"><a class="btn-link" style="padding-left:0px; padding-right:2px" href="'+editUrl+'"><span class="glyphicon glyphicon-pencil"></span></a> <a class="btn-link delete" style="padding-left:0px; padding-right:2px"><span class="glyphicon glyphicon-trash"></span></a><input type="hidden" value="'+data+'" name="MenuDetailForm[MenuId]" /></form>';
 						}
             		},
+					{ 
+						'aTargets': [ 2 ],
+      					'mData': 'Link',
+						'mRender': function ( data, type, full ) {
+							return '<a href="'+data+'">'+data+'</a>';
+						}
+            		},
             		{ 'visible': false,  'targets': [ 0, 4 ] }
         		],
 				'fnInitComplete':function(){
