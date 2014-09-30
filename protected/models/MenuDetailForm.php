@@ -129,6 +129,9 @@ class MenuDetailForm extends CActiveRecord
 		$transaction=$connection->beginTransaction();
 		try
 		{ 
+			if ($ParentId == null || $ParentId == ""){
+				$ParentId = "0";
+			}
 			$sql = "call Spr_Insert_Menu ('".$Caption."', '".$Link."', '".$Icon."', 
 				'".$Description."',".$ParentId.",'".$Enable."', '".$username."')";
 			$command=$connection->createCommand($sql);
@@ -139,7 +142,9 @@ class MenuDetailForm extends CActiveRecord
 		catch(Exception $e)
 		{
 			$response['code'] = StandardVariable::CONSTANT_RETUNN_ERROR;
-			$response['exception'] = $e->errorInfo;
+			//$response['exception'] = $e->errorInfo;
+			$response['exception'][2] = "call Spr_Insert_Menu ('".$Caption."', '".$Link."', '".$Icon."', 
+				'".$Description."',".$ParentId.",'".$Enable."', '".$username."')";
 		   	$transaction->rollback();
 		}
 		
@@ -245,6 +250,9 @@ class MenuDetailForm extends CActiveRecord
 		$transaction=$connection->beginTransaction();
 		try
 		{ 
+			if ($ParentId == null || $ParentId == ""){
+				$ParentId = "0";
+			}
 			$sql = "call Spr_Update_Menu (".$MenuId.",'".$Caption."','".$Link."','".$Icon."','".$Description."',".$ParentId.",'".$Enable."','".$username."')";
 			$command=$connection->createCommand($sql);
 			$status=$command->execute();
