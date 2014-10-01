@@ -34,7 +34,9 @@
         	<?php echo $form->labelEx($model,'Username', array('class'=>'control-label col-lg-2')); ?>
         </div>
         <div class="col-lg-6">
-        	<?php echo $form->textField($model,'Username', array('class'=>'form-control', 'disabled' => (isset($model->UserId) && $model->UserId != "") ? 'disabled' : '')) ;?>       </div>
+        	<?php echo $form->textField($model,'Username', array('class'=>'form-control', 'disabled' => (isset($model->UserId) && $model->UserId != "") ? 'disabled' : '')) ;?>
+            <?php if(isset($model->UserId) && $model->UserId != "") echo $form->hiddenField($model,'Username');?>
+        </div>
     </div>
 
 	<div class="form-group">
@@ -87,7 +89,7 @@
             <?php echo $form->labelEx($model,'Copy_User', array('class'=>'control-label col-lg-2')); ?>
         </div>
 		<div class="col-lg-6" style="margin-top:5px">
-	        <?php echo $form->CheckBox($model,'Copy_User',array('class'=>'check','onclick'=>'enabled_form($(\'.check\'));')); ?>
+	        <?php echo $form->CheckBox($model,'Copy_User',array('class'=>'check','onchange'=>'enabled_form($(\'.check\'));')); ?>
 		</div>
     </div>
 
@@ -131,9 +133,12 @@
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/js/select2/select2.js"></script>
 
 <script>
+
 	function enabled_form(id){
 		$('.enable_form').css('display', id.attr('checked') ? '' :'none');
 	}
+
+    $('.check').change(enabled_form($('.check')));
 
     $(".User").select2({
         placeholder: '',

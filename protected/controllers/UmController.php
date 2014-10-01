@@ -78,6 +78,17 @@ class UmController extends Controller
 		}	
 	}
 
+	public function actionGetUserList(){
+		if(isset($_POST['ajax']))
+		{
+			$model=new UserDetailForm;
+			$response = $model->getUserList(0);
+			echo(json_encode($response));	
+		}else{
+			$this->redirect(array('um/user'));
+		}	
+	}
+
 	// Uncomment the following methods and override them if needed
 	/*
 	public function filters()

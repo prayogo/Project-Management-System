@@ -22,6 +22,10 @@ class UserDetailForm extends CActiveRecord
 	public $Copy_User;
 	public $User;
 
+
+	public function setUsername($Username){
+		$this->Username = $Username;
+	}
 	/**
 	 * @return string the associated database table name
 	 */
@@ -36,7 +40,7 @@ class UserDetailForm extends CActiveRecord
 	public function rules()
 	{
 		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
+		// will receive user inputs.				
 		return array(
 			array('Username, Name, Email, Phone, Password, Confirm_Password', 'required'),
 			array('Username, Password, Confirm_Password', 'length', 'max'=>50),
@@ -48,10 +52,12 @@ class UserDetailForm extends CActiveRecord
 			array('Email', 'email'),
 			array('Username','unique','on'=>'insert'),
 			array('Email','unique','on'=>'insert'),
+			array('Email','unique','on'=>'update','criteria'=>array('condition'=>'`username`!=:Username','params'=>array(':Username'=>$this->Username))),			
 			array('Phone', 'numerical','integerOnly'=>true),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('UserId, Username, Name, Email, Phone, Password, Enable', 'safe', 'on'=>'search'),
+
 		);
 	}
 
@@ -79,7 +85,7 @@ class UserDetailForm extends CActiveRecord
 			'Phone' => 'Phone',
 			'Password' => 'Password',
 			'Confirm_Password' => 'Confirm Password',
-			'Copy_User' => 'Copy User Access',
+			'Copy_User' => 'Copy User',
 			'Enable' => 'Enable',
 			'User' => 'User',
 		);
@@ -153,15 +159,16 @@ class UserDetailForm extends CActiveRecord
 	}
 
 	/**
-	 * Function for get list user
+	 * Function for get list user except parameter userid
+	 * @param int $userid, userid
 	*/
-	public function getUserList(){
+	public function getUserList($UserId){
 		$connection=Yii::app()->db;
 		$connection->active=true;
 	
 		try
 		{ 
-			$sql = "call Spr_Get_UserList()";
+			$sql = "call Spr_Get_UserList('".$UserId."')";
 			$command=$connection->createCommand($sql);
 			$dataReader=$command->query();
 			$rows=$dataReader->readAll();
@@ -186,7 +193,7 @@ class UserDetailForm extends CActiveRecord
 	 * @param boolean $Enable, enable/disable menu.
 	 * @param int $UserId, Source User Id.
 	*/
-	public function insertUser($Username, $Name, $Email, $Phone, $Password, $Enable, $UserId)
+	public function insertUser($Username, $Name, $Email, $Phone, $Password, $Enable, $Copy_User, $UserId)
 	{
 		$response = array('code'=>'', 'exception'=>'');
 		$connection=Yii::app()->db;
@@ -197,14 +204,14 @@ class UserDetailForm extends CActiveRecord
 		try
 		{ 
 			$sql = "call Spr_Insert_User ('".$Username."', '".$Name."', '".$Email."', 
-				'".$Phone."','".$Password."','".$Enable."', '".$userin."')";
+				'".$Phone."','". CPasswordHelper::hashPassword($Password)."','".$Enable."', '".$userin."')";
 			$command=$connection->createCommand($sql);
 			$status=$command->execute();
 			
-			if(isset($UserId) && $UserId != null && $UserId != ""){
+			if(isset($UserId) && $UserId != null && $UserId != "" && isset($Copy_User) && $Copy_User != null && $Copy_User != "" ){
 				copyUserAccess($Username, $UserId, $transaction);
 			}
-			
+
 		   	$transaction->commit();
 		   	$response['code'] = StandardVariable::CONSTANT_RETURN_SUCCESS;
 		}
@@ -236,6 +243,83 @@ class UserDetailForm extends CActiveRecord
 			$sql = "call Spr_Copy_User_Access ('".$Username."', ".$UserId.", '".$userin."')";
 			$command=$connection->createCommand($sql);
 			$status=$command->execute();
+		   	$transaction->commit();
+		   	$response['code'] = StandardVariable::CONSTANT_RETURN_SUCCESS;
+		}
+		catch(Exception $e)
+		{
+			$response['code'] = StandardVariable::CONSTANT_RETUNN_ERROR;
+			$response['exception'] = $e->errorInfo;			
+		   	$transaction->rollback();
+		}
+		
+		return $response;
+	}
+
+	/**
+	 * Function for delete user
+	 * @param int $UserId, user.
+	*/
+	public function deleteUser($UserId)
+	{
+		$response = array('code'=>'', 'exception'=>'');
+		$connection=Yii::app()->db;
+		$connection->active=true;
+		$userin=GlobalFunction::getLoginUserName();
+		
+		$transaction=$connection->beginTransaction();
+		try
+		{ 
+			$sql = "call Spr_Delete_User (".$UserId.", '".$userin."')";
+			$command=$connection->createCommand($sql);
+			$status=$command->execute();
+		   	$transaction->commit();
+		   	$response['code'] = StandardVariable::CONSTANT_RETURN_SUCCESS;
+		}
+		catch(Exception $e)
+		{
+			$response['code'] = StandardVariable::CONSTANT_RETUNN_ERROR;
+			$response['exception'] = $e->errorInfo;			
+		   	$transaction->rollback();
+		}
+		
+		return $response;
+	}
+
+	/**
+	 * Function for update user detail
+	 * @param string $Username, username.
+	 * @param string $Name, name.
+	 * @param string $Email, email.
+	 * @param string $Phone, phone.
+	 * @param string $Password, password
+	 * @param boolean $Enable, enable/disable menu.
+	 * @param int $UserId, Source User Id.
+	*/
+	public function updateUser($Username, $Name, $Email, $Phone, $Password, $Enable, $Copy_User, $UserId)
+	{
+		$response = array('code'=>'', 'exception'=>'');
+		$connection=Yii::app()->db;
+		$connection->active=true;
+		$userin=GlobalFunction::getLoginUserName();
+		
+		$transaction=$connection->beginTransaction();
+		try
+		{ 
+			if($Password == StandardVariable::CONSTANT_PASSWORD)
+				$Password = 'NULL';
+			else 
+				$Password = "'".CPasswordHelper::hashPassword($Password)."'";
+
+			$sql = "call Spr_Update_User ('".$Username."', '".$Name."', '".$Email."', 
+				'".$Phone."',".$Password.",'".$Enable."', '".$userin."')";
+			$command=$connection->createCommand($sql);
+			$status=$command->execute();
+			
+			if(isset($UserId) && $UserId != null && $UserId != "" && isset($Copy_User) && $Copy_User != null && $Copy_User != "" ){
+				copyUserAccess($Username, $UserId, $transaction);
+			}
+
 		   	$transaction->commit();
 		   	$response['code'] = StandardVariable::CONSTANT_RETURN_SUCCESS;
 		}
