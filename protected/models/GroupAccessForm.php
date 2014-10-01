@@ -1,25 +1,22 @@
 <?php
 
 /**
- * This is the model class for table "trheadergroup".
+ * This is the model class for table "trdetailgroupaccess".
  *
- * The followings are the available columns in table 'trheadergroup':
+ * The followings are the available columns in table 'trdetailgroupaccess':
+ * @property integer $DGroupAccessId
  * @property integer $HGroupId
- * @property string $Group
- * @property string $Description
- * @property string $Enable
+ * @property integer $MenuId
  */
-class GroupHeaderForm extends CActiveRecord
+class GroupAccessForm extends CActiveRecord
 {
-	public $isCopyGroup;
-	public $GroupIdCopy;
-	
+	public $canAccess = false;
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'trheadergroup';
+		return 'trdetailgroupaccess';
 	}
 
 	/**
@@ -30,15 +27,11 @@ class GroupHeaderForm extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('Group, Description', 'required'),
-			array('Group', 'length', 'max'=>50),
-			array('Description', 'length', 'max'=>250),
-			array('Enable', 'length', 'max'=>1),
-			array('isCopyGroup', 'boolean'),
-			array('GroupIdCopy', 'numerical','integerOnly'=>true),
+			array('HGroupId, MenuId', 'required'),
+			array('HGroupId, MenuId', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('HGroupId, Group, Description, Enable', 'safe', 'on'=>'search'),
+			array('DGroupAccessId, HGroupId, MenuId', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -59,12 +52,9 @@ class GroupHeaderForm extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'HGroupId' => 'GroupId',
-			'Group' => 'Group',
-			'Description' => 'Description',
-			'Enable' => 'Enable',
-			'isCopyGroup' => 'Copy Group',
-			'GroupIdCopy' => 'Group',
+			'DGroupAccessId' => 'Dgroup Access',
+			'HGroupId' => 'Hgroup',
+			'MenuId' => 'Menu',
 		);
 	}
 
@@ -86,11 +76,9 @@ class GroupHeaderForm extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
+		$criteria->compare('DGroupAccessId',$this->DGroupAccessId);
 		$criteria->compare('HGroupId',$this->HGroupId);
-		$criteria->compare('Group',$this->Group,true);
-		$criteria->compare('Description',$this->Description,true);
-		$criteria->compare('Enable',$this->Enable,true);
-		$criteria->compare('isCopyGroup',$this->Enable,true);
+		$criteria->compare('MenuId',$this->MenuId);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -101,7 +89,7 @@ class GroupHeaderForm extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return GroupHeaderForm the static model class
+	 * @return GroupAccessForm the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -109,41 +97,16 @@ class GroupHeaderForm extends CActiveRecord
 	}
 	
 	/**
-	 * Function for get list group
-	 */
-	public function getGroupList(){
-		$connection=Yii::app()->db;
-		$connection->active=true;
-	
-		try
-		{ 
-			$sql = "call spr_get_grouplist";
-			$command=$connection->createCommand($sql);
-			$dataReader=$command->query();
-			$rows=$dataReader->readAll();
-			return $rows;
-		}
-		catch(Exception $e)
-		{
-			$response = array('code'=>'', 'exception'=>'');
-			$response['code'] = StandardVariable::CONSTANT_RETUNN_ERROR;
-			$response['exception'] = $e->errorInfo;
-			return $response;
-		}
-	}
-	
-	/**
-	 * Function for get group list, return group id dan group name
-	 * @param int $currGroupId, select all menu list except given group id
-	 * @param int $findById, group id which want to find
+	 * Function for get list group access menu
+	 * @param int $GroupId, for find access by specified group id, 0 for all
 	*/
-	public function getCopyGroupList($currGroupId, $findById){
+	public function getGroupAccessList($GroupId){
 		$connection=Yii::app()->db;
 		$connection->active=true;
 	
 		try
 		{ 
-			$sql = "call spr_get_copygrouplist (".$currGroupId.", ".$findById.")";
+			$sql = "call Spr_Get_GroupAccessList (".$GroupId.")";
 			$command=$connection->createCommand($sql);
 			$dataReader=$command->query();
 			$rows=$dataReader->readAll();

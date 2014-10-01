@@ -18,7 +18,9 @@ $this->breadcrumbs=array(
     <table class="table striped hovered dataTable" id="dataTables-1" style="width:100%;">
       <thead>
         <tr>
+	      <th class="text-left">GroupId</th>
           <th class="text-left">Group</th>
+          <th class="text-left">Enable</th>
           <th class="text-left" style="width:12%">Action</th>
         </tr>
       </thead>
@@ -38,55 +40,39 @@ $this->breadcrumbs=array(
 		});
 		
 		function AjaxGetFieldDataSucceeded(result) {
-			if (result != "[]") {
-				//instance of datatable
-				oTable = $('#dataTables-1').dataTable({
-					"order": [[ 1, "asc"]],
-					"bProcessing": true,
-					"aaData": result,
-					//important  -- headers of the json
-					"aoColumns": [
-						{ 'mData': 'HGroupId' },
-						{ 'mData': 'Group' },
-						{ 'mData': 'Enable' },
-					],
-					'aoColumnDefs': [
-						{ 
-							'aTargets': [ 3 ],
-							'mData': 'MenuId',
-							'mRender': function ( data, type, full ) {
-								var editUrl ='<?php echo Yii::app()->createUrl('menu/managemenu',array('id'=>'')) ?>' + '/' + data;
-								var deleteUrl = '<?php echo Yii::app()->createUrl('um/menu') ?>';
-								return '<form method="POST" action="'+deleteUrl+'" name="update-delete-form"><a class="btn-link" style="padding-left:0px; padding-right:2px" href="'+editUrl+'"><span class="glyphicon glyphicon-pencil"></span></a> <a class="btn-link delete" style="padding-left:0px; padding-right:2px"><span class="glyphicon glyphicon-trash"></span></a><input type="hidden" value="'+data+'" name="MenuDetailForm[MenuId]" /></form>';
-							}
-						},
-						{ 'visible': false,  'targets': [ 0 ] },
-						{ 'targets': [ 2, 3 ], 'orderable': false }
-					],
-					'fnInitComplete':function(){
-						$('.delete').click(function(e){
-							bootbox.dialog({
-							  message: "Are you sure want to delete?",
-							  title: "<span class='glyphicon glyphicon-question-sign'></span> Delete Menu",
-							  buttons: {
-								 cancel: {
-									label: "Cancel",
-									className: "btn-default",
-								},
-								main: {
-								  label: "OK",
-								  className: "btn-primary",
-								  callback: function() {
-									$($(e)[0].currentTarget).closest('form').submit();
-								  }
-								}
-							  }
-							});
-							event.preventDefault();
-						});
-					}
-				});
-			}	
+			//instance of datatable
+			$('#dataTables-1').dataTable({
+				"order": [[ 1, "asc"]],
+				"bProcessing": true,
+				"aaData": result,
+				//important  -- headers of the json
+				"aoColumns": [
+					{ 'mData': 'HGroupId' },
+					{ 'mData': 'Group' },
+					{ 'mData': 'Enable' },
+				],
+				'aoColumnDefs': [
+					{ 
+						'aTargets': [ 2 ],
+						'mData': 'Enable',
+						'mRender': function ( data, type, full ) {
+							var checked = data == 0 ? "" : "checked";
+							return '<input type="checkbox" '+checked+' disabled="true"/>';
+						}
+					},
+					{ 
+						'aTargets': [ 3 ],
+						'mData': 'HGroupId',
+						'mRender': function ( data, type, full ) {
+							var editUrl ='<?php echo Yii::app()->createUrl('menu/managemenu',array('id'=>'')) ?>' + '/' + data;
+							var deleteUrl = '<?php echo Yii::app()->createUrl('um/menu') ?>';
+							return '<form method="POST" action="'+deleteUrl+'" name="update-delete-form"><a class="btn-link" style="padding-left:0px; padding-right:2px" href="'+editUrl+'"><span class="glyphicon glyphicon-pencil"></span></a> <a class="btn-link delete" style="padding-left:0px; padding-right:2px"><span class="glyphicon glyphicon-trash"></span></a><input type="hidden" value="'+data+'" name="MenuDetailForm[MenuId]" /></form>';
+						}
+					},
+					{ 'visible': false,  'targets': [ 0 ] },
+					{ 'targets': [ 3 ], 'orderable': false }
+				],
+			});
 		}
 	</script> 
   </div>

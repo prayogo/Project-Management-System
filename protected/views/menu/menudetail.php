@@ -100,7 +100,7 @@
 		placeholder: '',
 		query: function(query) {
 			$.ajax({
-				url: "http://localhost:8088/pms/menu/GetParentMenuList", 
+				url: '<?php echo Yii::app()->request->baseUrl;?>/menu/GetParentMenuList', 
 				data: { ajax: 1, menuid: <?php echo (isset($model->MenuId) && $model->MenuId != "") ? $model->MenuId : 0 ?>, },
 				dataType: 'json',
 				type: "POST",
@@ -118,7 +118,7 @@
 		initSelection: function(element, callback) {
             var id = $(element).val();
             if(id !== "") {
-                $.ajax("http://localhost:8088/pms/menu/GetParentMenuList", {
+                $.ajax("<?php echo Yii::app()->request->baseUrl;?>/menu/GetParentMenuList", {
                     data: {id: id, ajax: 1, menuid: <?php echo (isset($model->MenuId) && $model->MenuId != "") ? $model->MenuId : 0 ?>},
                     dataType: "json", type: "POST"
                 }).done(function(data) {
