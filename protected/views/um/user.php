@@ -10,10 +10,6 @@ $this->breadcrumbs=array(
 <h1 class="blok" style="padding: 8px 15px;background-color: #f5f5f5;margin-bottom: 20px;">
   <i class="fi-torso-business"></i> Users
 </h1>
-
-<?php 
-  echo CHtml::errorSummary($model);
-?>
 <div class="panel panel-default">
   <div class="panel-heading">
       <a class="btn btn-default" style="margin-bottom:0px" href="<?php echo Yii::app()->createUrl('user/manageuser') ?>"><i class="fi-plus"></i> Add New User</a>
@@ -32,12 +28,7 @@ $this->breadcrumbs=array(
         </tr>
       </thead>
     </table>
-
-    <?php 
-      echo CHtml::beginForm();
-      echo CHtml::endForm();
-    ?>
-    <script src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.dataTables.js"></script> 
+  <script src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.dataTables.js"></script> 
     
   <script>  
     $.ajax({

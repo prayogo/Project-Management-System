@@ -11,10 +11,6 @@
  * @property string $Phone
  * @property string $Password
  * @property string $Enable
- * @property string $UserIn
- * @property string $DateIn
- * @property string $UserUp
- * @property string $DateUp
  */
 class UserDetailForm extends CActiveRecord
 {
