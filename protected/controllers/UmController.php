@@ -6,7 +6,24 @@ class UmController extends Controller
 
 	public function actionGroup()
 	{
-		$this->render('group');
+		$model=new GroupHeaderForm;
+
+		if (isset($_POST['GroupHeaderForm'])){
+			if ($_POST['GroupHeaderForm']['GroupId'] != null && $_POST['GroupHeaderForm']['GroupId'] != ""){
+				$response1 = $model->deleteGroup($_POST['GroupHeaderForm']['GroupId']);
+				if ($response1['code'] == StandardVariable::CONSTANT_RETURN_SUCCESS){
+					$this->refresh();
+				}else{
+					if (isset($response1['exception'][2])){
+						$model->addError('request', $response1['exception'][2]);
+					}else{
+						$model->addError('request', 'Oops, something wrong. Please try again later.');
+					}
+				}
+			}
+		}
+		
+		$this->render('group', array('model'=>$model));
 	}
 
 	public function actionUser()
@@ -19,13 +36,13 @@ class UmController extends Controller
 				if ($response1['code'] == StandardVariable::CONSTANT_RETURN_SUCCESS){
 					$this->refresh();
 				}else{
-					$model->addError('request', $response1['exception'][2]);
+					if (isset($response1['exception'][2])){
+						$model->addError('request', $response1['exception'][2]);
+					}else{
+						$model->addError('request', 'Oops, something wrong. Please try again later.');
+					}
 				}
 			}
-		}
-		
-		if (isset($response['code']) && $response['code'] == StandardVariable::CONSTANT_RETUNN_ERROR){
-			$model->addError('request', $response['exception'][2]);	
 		}
 
 		$this->render('user', array('model'=>$model));
@@ -40,13 +57,13 @@ class UmController extends Controller
 				if ($response1['code'] == StandardVariable::CONSTANT_RETURN_SUCCESS){
 					$this->refresh();
 				}else{
-					$model->addError('request', $response1['exception'][2]);
+					if (isset($response1['exception'][2])){
+						$model->addError('request', $response1['exception'][2]);
+					}else{
+						$model->addError('request', 'Oops, something wrong. Please try again later.');
+					}
 				}
 			}
-		}
-		
-		if (isset($response['code']) && $response['code'] == StandardVariable::CONSTANT_RETUNN_ERROR){
-			$model->addError('request', $response['exception'][2]);	
 		}
 		
 		$this->render('menu', array('model'=>$model));

@@ -1,4 +1,5 @@
-<div class="panel panel-default">
+<div class="panel panel-default" id="group-user">
+<?php echo $form->hiddenField($model_user,'isChange') ?>
 	<div class="panel-body">
 	    <div class="form-horizontal" role="form"> 
             <table id="tblGroupUser" width="100%">
@@ -6,9 +7,9 @@
                 <tr>
                   <th style="width:5%"></th>
                   <th>UserId</th>
-                  <th style="width:30%">Name</th>
-                  <th style="width:20%">Username</th>
-                  <th style="width:20%">Email</th>
+                  <th style="width:40%">Name</th>
+                  <th style="width:30%">Username</th>
+                  <th style="width:25%">Email</th>
                 </tr>
               </thead>
               <tbody>
@@ -29,6 +30,10 @@
 </div>
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.dataTables.js"></script> 
 <script>
+	$('#group-user').change(function(e){
+		$('#GroupUserForm_isChange').val('1');
+	});
+	
 	var checkedUser = new Array();
 	<?php
 		if (isset($checkUser)){
@@ -43,11 +48,12 @@
 		url: '<?php echo Yii::app()->request->baseUrl;?>/group/GroupUserList',
 		data: {"ajax":"1"},
 		dataType: "json",
-		success: AjaxGetFieldDataSucceeded,
+		success: AjaxGetFieldDataSucceededUser,
 		//error: AjaxGetFieldDataFailed
 	});
 	
-	function AjaxGetFieldDataSucceeded(result) {
+	function AjaxGetFieldDataSucceededUser(result) {
+		$('#tblGroupUser').dataTable().fnDestroy();
 		$('#tblGroupUser').dataTable({
 			"order": [[ 2, "asc"]],
 			"bProcessing": true,
@@ -72,8 +78,13 @@
 					}
 				},
 				{ 'visible': false,  'targets': [ 1 ] },
-				{ 'targets': [ 0 ], 'orderable': false }
+				{ 'targets': [ 0 ], 'orderable': false },
 			],
 		});
 	}
 </script> 
+<style>
+	#tblGroupUser tr td:first-child{
+		width:5%;	
+	}
+</style>

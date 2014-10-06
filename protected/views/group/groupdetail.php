@@ -4,7 +4,7 @@
 /* @var $form CActiveForm */
 ?>
 
-<div class="panel panel-default">
+<div class="panel panel-default" id="group-detail">
 
 <?php 
 /*	$form=$this->beginWidget('CActiveForm', array(
@@ -20,6 +20,7 @@
     <div class="form-horizontal" role="form">    
 
 	<?php echo $form->hiddenField($model_detail,'HGroupId') ?>
+    <?php echo $form->hiddenField($model_detail,'isChange') ?>
     
     <div class="form-group">
         <div class="col-1"><span class="pull-right"></span></div>
@@ -83,6 +84,36 @@
 <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/js/select2/select2-bootstrap.css" />
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/js/select2/select2.js"></script>
 <script>
+	$('#group-detail').change(function(e){
+		$('#GroupHeaderForm_isChange').val('1');
+	});
+	
+	$(".GroupIdCopy").change(function(e) { 
+		var paramGroupId = 0;
+		if ($('.check').attr('checked')){
+			paramGroupId = e.val;
+		}else{
+			paramGroupId = 0;
+		}
+		$.ajax({
+			type: "POST",
+			url: '<?php echo Yii::app()->request->baseUrl;?>/group/GroupAccessList',
+			data: {"ajax":"1","groupid":paramGroupId},
+			dataType: "json",
+			success: AjaxGetFieldDataSucceededAccess,
+			//error: AjaxGetFieldDataFailed
+		});
+		
+		$.ajax({
+			type: "POST",
+			url: '<?php echo Yii::app()->request->baseUrl;?>/group/GroupUserList',
+			data: {"ajax":"1","groupid":paramGroupId},
+			dataType: "json",
+			success: AjaxGetFieldDataSucceededUser,
+			//error: AjaxGetFieldDataFailed
+		});
+	})
+	
 	$(".GroupIdCopy").select2({
 		placeholder: '',
 		query: function(query) {
@@ -120,9 +151,7 @@
 	$('.check').change(enabled_form($('.check')));
 	
 	function enabled_form(id){
-		if (id.attr('checked')){
-			$(".GroupIdCopy").select2('val', 0);
-		}
+		$(".GroupIdCopy").select2('val', '', true);
 		$('.enable_form').css('display', id.attr('checked') ? '' :'none');
 	}
 </script>

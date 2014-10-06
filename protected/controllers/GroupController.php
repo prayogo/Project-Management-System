@@ -9,6 +9,7 @@ class GroupController extends Controller
 		$model_detail=new GroupHeaderForm;
 		$model_detail->Enable=1;
 		$model_detail->isCopyGroup=0;
+		$model_detail->isChange=false;
 		
 		$activeTab = "groupdetail";
 		
@@ -21,7 +22,6 @@ class GroupController extends Controller
 		if(isset($_POST['ajax']) && $_POST['ajax']==='group-header-form-form')
 		{
 			echo CActiveForm::validate($model_detail);
-			echo CActiveForm::validate($model_access);
 			Yii::app()->end();
 		}
 		
@@ -43,32 +43,94 @@ class GroupController extends Controller
 				$model_detail->isCopyGroup = $_POST['GroupHeaderForm']['isCopyGroup'];
 				$model_detail->GroupIdCopy = $_POST['GroupHeaderForm']['GroupIdCopy'];
 				$model_detail->Enable = $_POST['GroupHeaderForm']['Enable'];
+				$model_detail->isChange=$_POST['GroupHeaderForm']['isChange'];
+			
+				if (isset($_POST['GroupAccessForm']['isChange']) && $_POST['GroupAccessForm']['isChange'] != null && 
+					$_POST['GroupAccessForm']['isChange'] != ""){
+	
+					if (isset($_POST['GroupAccessForm']["GroupAccess"])){
+						$activeTab = "groupaccess";
+						$model_access->isChange=$_POST['GroupAccessForm']['isChange'];
+						foreach ($_POST['GroupAccessForm']["GroupAccess"] as $key => $value) {
+							if ($value == "on"){
+								array_push($checkAccess, $key);
+							}
+						}
+					}
+					
+				}
+				
+				if (isset($_POST['GroupUserForm']['isChange']) && $_POST['GroupUserForm']['isChange'] != null && 
+					$_POST['GroupUserForm']['isChange'] != ""){
+					
+					if (isset($_POST['GroupUserForm']["GroupUser"])){
+						$activeTab = "groupuser";
+					  	$model_user->isChange=$_POST['GroupUserForm']['isChange'];
+					  	foreach ($_POST['GroupUserForm']["GroupUser"] as $key => $value) {
+						  	if ($value == "on"){
+							  	array_push($checkUser, $key);
+						  	}
+					  	}
+					}
+					
+				}
 				
 				if ($model_detail->HGroupId != null && $model_detail->HGroupId != ""){
-					
+					$response1 = $model_detail->updateGroup($model_detail->HGroupId, $model_detail->Group, $model_detail->Description, $model_detail->Enable, $model_detail->isChange, $checkAccess, $checkUser);
+					if ($response1['code'] == StandardVariable::CONSTANT_RETURN_SUCCESS){
+						$this->redirect(array('um/group'));
+					}else{
+						if (isset($response1['exception'][2])){
+							$model_detail->addError('request', $response1['exception'][2]);
+						}else{
+							$model_detail->addError('request', 'Oops, something wrong. Please try again later.');
+						}
+					}
 				}
 				else{
-					
+					$response1 = $model_detail->insertGroup($model_detail->Group, $model_detail->Description, $model_detail->Enable, $model_detail->isChange, $checkAccess, $checkUser);
+					if ($response1['code'] == StandardVariable::CONSTANT_RETURN_SUCCESS){
+						$this->redirect(array('um/group'));
+					}else{
+						if (isset($response1['exception'][2])){
+							$model_detail->addError('request', $response1['exception'][2]);
+						}else{
+							$model_detail->addError('request', 'Oops, something wrong. Please try again later.');
+						}
+					}
 				}
 			}
-		}
-		
-		if (isset($_POST['GroupAccessForm']["GroupAccess"])){
-			$activeTab = "groupaccess";
-			foreach ($_POST['GroupAccessForm']["GroupAccess"] as $key => $value) {
-				if ($value == "on"){
-					array_push($checkAccess, $key);
+		}else{
+			$paramURL = CHttpRequest::getParam('id');
+			if (isset($paramURL) && $paramURL != null && $paramURL != ""){
+				$response = $model_detail->getGroupHeaderDetail($paramURL);
+				if (!isset($response['code'])){
+					if (!empty($response) && isset($response[0]['HGroupId'])){
+						$model_detail->HGroupId = $response[0]['HGroupId'];
+						$model_detail->Group = $response[0]['Group'];
+						$model_detail->Description = $response[0]['Description'];
+						$model_detail->Enable = $response[0]['Enable'];
+						  
+						$response2 = $model_access->getGroupAccessList($model_detail->HGroupId);
+						if (!isset($response2['code'])){
+							foreach ($response2 as $row) {
+								if ($row["canAccess"] == "1"){
+									array_push($checkAccess, $row["MenuId"]);
+								}
+							}
+						}
+						
+						$response3 = $model_user->getGroupUserList($model_detail->HGroupId);
+						if (!isset($response3['code'])){
+							foreach ($response3 as $row) {
+								if ($row["canAccess"] == "1"){
+									array_push($checkUser, $row["UserId"]);
+								}
+							}
+						}
+					}
 				}
-			}
-		}
-		
-		if (isset($_POST['GroupUserForm']["GroupUser"])){
-			$activeTab = "groupuser";
-			foreach ($_POST['GroupUserForm']["GroupUser"] as $key => $value) {
-				if ($value == "on"){
-					array_push($checkUser, $key);
-				}
-			}
+			}	
 		}
 		
 		$this->render('managegroup', array(

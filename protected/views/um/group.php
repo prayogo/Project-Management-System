@@ -64,9 +64,9 @@ $this->breadcrumbs=array(
 						'aTargets': [ 3 ],
 						'mData': 'HGroupId',
 						'mRender': function ( data, type, full ) {
-							var editUrl ='<?php echo Yii::app()->createUrl('menu/managemenu',array('id'=>'')) ?>' + '/' + data;
-							var deleteUrl = '<?php echo Yii::app()->createUrl('um/menu') ?>';
-							return '<form method="POST" action="'+deleteUrl+'" name="update-delete-form"><a class="btn-link" style="padding-left:0px; padding-right:2px" href="'+editUrl+'"><span class="glyphicon glyphicon-pencil"></span></a> <a class="btn-link delete" style="padding-left:0px; padding-right:2px"><span class="glyphicon glyphicon-trash"></span></a><input type="hidden" value="'+data+'" name="MenuDetailForm[MenuId]" /></form>';
+							var editUrl ='<?php echo Yii::app()->createUrl('group/managegroup',array('id'=>'')) ?>' + '/' + data;
+							var deleteUrl = '<?php echo Yii::app()->createUrl('um/group') ?>';
+							return '<form method="POST" action="'+deleteUrl+'" name="update-delete-form"><a class="btn-link" style="padding-left:0px; padding-right:2px" href="'+editUrl+'"><span class="glyphicon glyphicon-pencil"></span></a> <a class="btn-link delete" style="padding-left:0px; padding-right:2px"><span class="glyphicon glyphicon-trash"></span></a><input type="hidden" value="'+data+'" name="GroupHeaderForm[GroupId]" /></form>';
 						}
 					},
 					{ 'visible': false,  'targets': [ 0 ] },

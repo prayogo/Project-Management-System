@@ -13,6 +13,7 @@ class GroupHeaderForm extends CActiveRecord
 {
 	public $isCopyGroup;
 	public $GroupIdCopy;
+	public $isChange = false;
 	
 	/**
 	 * @return string the associated database table name
@@ -156,5 +157,176 @@ class GroupHeaderForm extends CActiveRecord
 			$response['exception'] = $e->errorInfo;
 			return $response;
 		}
+	}
+	
+	/**
+	 * Function for insert group detail
+	 * @param string $Group, group name.
+	 * @param string $Description, group description.
+	 * @param string $Enable, enable/disable group.
+	 * @param string $isChange, flag for field change in view.
+	 * @param string $groupAccess, array of menu id which want assign to group.
+	 * @param string $groupUser, array of user id which want assign to group.
+	*/
+	public function insertGroup($Group, $Description, $Enable, $isChange, $groupAccess, $groupUser)
+	{
+		$response = array('code'=>'', 'exception'=>'');
+		$connection=Yii::app()->db;
+		$connection->active=true;
+		$username=GlobalFunction::getLoginUserName();
+		
+		$transaction=$connection->beginTransaction();
+		try
+		{ 
+			$id = 0;
+			if ($isChange == "1"){
+				$sql = "call Spr_Insert_GroupDetail ('".$Group."','".$Description."',".$Enable.",'".$username."')";
+				$command=$connection->createCommand($sql);
+				$dataReader=$command->query();
+				$rows=$dataReader->readAll();
+				$id = $rows[0]["primaryid"];
+				$dataReader->close();
+			}
+			
+			$command = false;
+			
+			for($i = 0; $i < count($groupAccess); $i++){
+				$sql = "call Spr_Insert_Update_GroupAccess (".$id.", ".$groupAccess[$i].",'".$username."')";
+				$command=$connection->createCommand($sql);
+				$status=$command->execute();
+			}
+			
+			for($i = 0; $i < count($groupUser); $i++){
+				$sql = "call Spr_Insert_Update_GroupUser (".$id.", ".$groupUser[$i].",'".$username."')";
+				$command=$connection->createCommand($sql);
+				$status=$command->execute();
+			}
+			
+		   	$transaction->commit();
+		   	$response['code'] = StandardVariable::CONSTANT_RETURN_SUCCESS;
+		}
+		catch(Exception $e)
+		{
+			$response['code'] = StandardVariable::CONSTANT_RETUNN_ERROR;
+			$response['exception'] = $e->errorInfo;
+		   	$transaction->rollback();
+		}
+		
+		return $response;
+	}
+	
+	/**
+	 * Function for insert group detail
+	 * @param string $GroupId, group id.
+	 * @param string $Group, group name.
+	 * @param string $Description, group description.
+	 * @param string $Enable, enable/disable group.
+	 * @param string $isChange, flag for field change in view.
+	 * @param string $groupAccess, array of menu id which want assign to group.
+	 * @param string $groupUser, array of user id which want assign to group.
+	*/
+	public function updateGroup($GroupId, $Group, $Description, $Enable, $isChange, $groupAccess, $groupUser)
+	{
+		$response = array('code'=>'', 'exception'=>'');
+		$connection=Yii::app()->db;
+		$connection->active=true;
+		$username=GlobalFunction::getLoginUserName();
+		
+		$transaction=$connection->beginTransaction();
+		
+		try
+		{ 
+			if ($isChange == "1"){
+				$sql = "call Spr_Update_GroupDetail (".$GroupId.",'".$Group."','".$Description."',".$Enable.",'".$username."')";
+				$command=$connection->createCommand($sql);
+				$dataReader=$command->execute();
+			}
+			
+			$command = false;
+			$strParamAccess= "";
+			for($i = 0; $i < count($groupAccess); $i++){
+				$strParamAccess = $strParamAccess.','.$groupAccess[$i];
+				$sql = "call Spr_Insert_Update_GroupAccess (".$GroupId.", ".$groupAccess[$i].",'".$username."')";
+				$command=$connection->createCommand($sql);
+				$status=$command->execute();
+			}
+			if (count($groupAccess) > 0){
+				$strParamAccess = substr($strParamAccess, 1);
+				$sql = "call Spr_Delete_GroupAccess (".$GroupId.", '".$strParamAccess."', '".$username."')";
+				$command=$connection->createCommand($sql);
+				$status=$command->execute();
+			}
+			
+			$strParamUser = "";
+			for($i = 0; $i < count($groupUser); $i++){
+				$strParamUser = $strParamUser.','.$groupUser[$i];
+				$sql = "call Spr_Insert_Update_GroupUser (".$GroupId.", ".$groupUser[$i].",'".$username."')"; 
+				$command=$connection->createCommand($sql);
+				$status=$command->execute();
+			}
+			
+			if (count($groupUser) > 0){
+				$strParamUser = substr($strParamUser, 1);
+				$sql = "call Spr_Delete_GroupUser (".$GroupId.", '".$strParamUser."', '".$username."')";
+				$command=$connection->createCommand($sql);
+				$status=$command->execute();
+			}
+
+		   	$transaction->commit();
+		   	$response['code'] = StandardVariable::CONSTANT_RETURN_SUCCESS;
+		}
+		catch(Exception $e)
+		{
+			$response['code'] = StandardVariable::CONSTANT_RETUNN_ERROR;
+			$response['exception'] = $e->errorInfo;			
+		   	$transaction->rollback();
+		}
+		
+		return $response;
+	}
+	
+	public function getGroupHeaderDetail($GroupId){
+		$connection=Yii::app()->db;
+		$connection->active=true;
+	
+		try
+		{ 
+			$sql = "call Spr_Get_GroupHeaderDetail (".$GroupId.")";
+			$command=$connection->createCommand($sql);
+			$dataReader=$command->query();
+			$rows=$dataReader->readAll();
+			return $rows;
+		}
+		catch(Exception $e)
+		{
+			$response = array('code'=>'', 'exception'=>'');
+			$response['code'] = StandardVariable::CONSTANT_RETUNN_ERROR;
+			$response['exception'] = $e->errorInfo;
+			return $response;
+		}
+	}
+	
+	public function deleteGroup($GroupId){
+		$response = array('code'=>'', 'exception'=>'');
+		$connection=Yii::app()->db;
+		$connection->active=true;
+		$username=GlobalFunction::getLoginUserName();
+		
+		$transaction=$connection->beginTransaction();
+		
+		try
+		{ 
+			
+		   	$transaction->commit();
+		   	$response['code'] = StandardVariable::CONSTANT_RETURN_SUCCESS;
+		}
+		catch(Exception $e)
+		{
+			$response['code'] = StandardVariable::CONSTANT_RETUNN_ERROR;
+			$response['exception'] = $e->errorInfo;			
+		   	$transaction->rollback();
+		}
+		
+		return $response;
 	}
 }

@@ -32,7 +32,7 @@ $this->breadcrumbs=array(
        
       $this->widget('CTabView',array(
           'tabs'=>array(
-              $tab1 => array(                
+              $tab1 => array(             
                   'title'=>'Group Detail', 
                   'view'=>'groupdetail',
 				  'data'=>array('model_detail'=>$model_detail, 'form'=>$form),
@@ -49,7 +49,8 @@ $this->breadcrumbs=array(
               ),
           ),
           'cssFile'=>false,        
-		  'activeTab'=>$activeTab
+		  'activeTab'=>$activeTab,
+		  'id'=>'tab_groupdetail',
       ));
     ?>
 <?php $this->endWidget(); ?>    
