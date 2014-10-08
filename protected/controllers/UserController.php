@@ -71,21 +71,26 @@ class UserController extends Controller
 							}
 						}
 					}
+					else{
+						array_push($checkAccess, 0);
+					}
 					
 				}
 				
-				if (isset($_POST['UserAccessForm']['isChange']) && $_POST['UserAccessForm']['isChange'] != null && $_POST['UserAccessForm']['isChange'] != ""){
+				if (isset($_POST['UserGroupForm']['isChange']) && $_POST['UserGroupForm']['isChange'] != null && $_POST['UserGroupForm']['isChange'] != ""){
 					
-					if (isset($_POST['UserAccessForm']["UserGroup"])){
+					if (isset($_POST['UserGroupForm']["UserGroup"])){
 						$activeTab = "usergroup";
-					  	$model_user->isChange=$_POST['UserAccessForm']['isChange'];
-					  	foreach ($_POST['UserAccessForm']["UserGroup"] as $key => $value) {
+					  	$model_user->isChange=$_POST['UserGroupForm']['isChange'];
+					  	foreach ($_POST['UserGroupForm']["UserGroup"] as $key => $value) {
 						  	if ($value == "on"){
 							  	array_push($checkGroup, $key);
 						  	}
 					  	}
 					}
-					
+				  	else{
+				  		array_push($checkGroup, 0);
+				  	}
 				}
 
 				$response = $model_detail->getUserDetail($model_detail->UserId);
@@ -147,7 +152,7 @@ class UserController extends Controller
 					if (!isset($response3['code'])){
 						foreach ($response3 as $row) {
 							if ($row["canAccess"] == "1"){
-								array_push($checkUser, $row["GroupId"]);
+								array_push($checkGroup, $row["HGroupId"]);
 							}
 						}
 					}

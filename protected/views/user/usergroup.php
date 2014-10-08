@@ -5,10 +5,10 @@
             <table id="tblUserGroup" width="100%">
               <thead>
                 <tr>
-                  <th style="width:5%"></th>
+                  <th ></th>
                   <th>HGroupId</th>
-                  <th style="width:20%">Group Name</th>
-                  <th style="width:50%">Description</th>                  
+                  <th >Group Name</th>
+                  <th >Description</th>                  
                 </tr>
               </thead>
               <tbody>
@@ -53,9 +53,9 @@
 	});
 	
 	function AjaxGetFieldDataSucceededGroup(result) {
-		$('#tblGroupUser').dataTable().fnDestroy();
-		$('#tblGroupUser').dataTable({
-			"order": [[ 2, "asc"]],
+		$('#tblUserGroup').dataTable().fnDestroy();
+		$('#tblUserGroup').dataTable({
+			"order": [[ 2, "asc"]],	
 			"bProcessing": true,
 			"aaData": result,
 			"aoColumns": [
@@ -70,14 +70,15 @@
 					'mData': 'canAccess',
 					'mRender': function ( data, type, row ) {
 						var checked = data == 0 ? "" : "checked";
-						if (jQuery.inArray(row.GroupId, checkedUser) >= 0){
+						if (jQuery.inArray(row.HGroupId, checkedGroup) >= 0){
 							checked = "checked";
 						}
-						return '<input name="UserGroupForm[UserGroup]['+row.GroupId+']" type="checkbox" '+checked+'/>';
+						return '<input name="UserGroupForm[UserGroup]['+row.HGroupId+']" type="checkbox" '+checked+'/>';
 					}
 				},
 				{ 'visible': false,  'targets': [ 1 ] },
-				{ 'targets': [ 0 ], 'orderable': false }
+				{ 'targets': [ 0 ], 'orderable': false },
+				{ "width": "5%", "targets": 0 }
 			],
 		});
 	}

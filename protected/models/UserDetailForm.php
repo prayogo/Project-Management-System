@@ -338,7 +338,6 @@ class UserDetailForm extends CActiveRecord
 				$command=$connection->createCommand($sql);
 				$status=$command->execute();
 			}
-			var_dump("Spr_Delete_User_Access (".$UserId.", '".$strParamAccess."', '".$userin."')");
 			if (count($userAccess) > 0){
 				$strParamAccess = substr($strParamAccess, 1);
 				$sql = "call Spr_Delete_User_Access (".$UserId.", '".$strParamAccess."', '".$userin."')";
