@@ -246,9 +246,11 @@ class GroupHeaderForm extends CActiveRecord
 			$strParamAccess= "";
 			for($i = 0; $i < count($groupAccess); $i++){
 				$strParamAccess = $strParamAccess.','.$groupAccess[$i];
-				$sql = "call Spr_Insert_Update_GroupAccess (".$GroupId.", ".$groupAccess[$i].",'".$username."')";
-				$command=$connection->createCommand($sql);
-				$status=$command->execute();
+				if ($groupAccess[$i] != 0){
+					$sql = "call Spr_Insert_Update_GroupAccess (".$GroupId.", ".$groupAccess[$i].",'".$username."')";
+					$command=$connection->createCommand($sql);
+					$status=$command->execute();
+				}
 			}
 			if (count($groupAccess) > 0){
 				$strParamAccess = substr($strParamAccess, 1);
@@ -260,9 +262,11 @@ class GroupHeaderForm extends CActiveRecord
 			$strParamUser = "";
 			for($i = 0; $i < count($groupUser); $i++){
 				$strParamUser = $strParamUser.','.$groupUser[$i];
-				$sql = "call Spr_Insert_Update_GroupUser (".$GroupId.", ".$groupUser[$i].",'".$username."')"; 
-				$command=$connection->createCommand($sql);
-				$status=$command->execute();
+				if ($groupUser[$i] != 0){
+					$sql = "call Spr_Insert_Update_GroupUser (".$GroupId.", ".$groupUser[$i].",'".$username."')"; 
+					$command=$connection->createCommand($sql);
+					$status=$command->execute();
+				}
 			}
 			
 			if (count($groupUser) > 0){
@@ -316,7 +320,18 @@ class GroupHeaderForm extends CActiveRecord
 		
 		try
 		{ 
+			$sql = "call Spr_Delete_GroupDetail (".$GroupId.",'".$username."')";
+			$command=$connection->createCommand($sql);
+			$status=$command->execute();
 			
+			$sql = "call Spr_Delete_GroupAccess (".$GroupId.", '0', '".$username."')";
+			$command=$connection->createCommand($sql);
+			$status=$command->execute();
+			
+			$sql = "call Spr_Delete_GroupUser (".$GroupId.", '0', '".$username."')";
+			$command=$connection->createCommand($sql);
+			$status=$command->execute();
+
 		   	$transaction->commit();
 		   	$response['code'] = StandardVariable::CONSTANT_RETURN_SUCCESS;
 		}
