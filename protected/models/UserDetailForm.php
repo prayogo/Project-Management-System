@@ -17,7 +17,7 @@ class UserDetailForm extends CActiveRecord
 	public $Confirm_Password;
 	public $Copy_User;
 	public $User;
-
+	public $isChange = false;
 
 	public function setUsername($Username){
 		$this->Username = $Username;
@@ -180,6 +180,32 @@ class UserDetailForm extends CActiveRecord
 	}
 
 	/**
+	 * Function for get copy list user
+	 * @param int $userid, userid
+	 * @param int $findByUserId, userid which want to find
+	*/
+	public function getCopyUserList($UserId, $findByUserId){
+		$connection=Yii::app()->db;
+		$connection->active=true;
+	
+		try
+		{ 
+			$sql = "call Spr_Get_Copy_UserList('".$UserId."',".$findByUserId.")";
+			$command=$connection->createCommand($sql);
+			$dataReader=$command->query();
+			$rows=$dataReader->readAll();
+			return $rows;
+		}
+		catch(Exception $e)
+		{
+			$response = array('code'=>'', 'exception'=>'');
+			$response['code'] = StandardVariable::CONSTANT_RETUNN_ERROR;
+			$response['exception'] = $e->errorInfo;
+			return $response;
+		}
+	}
+
+	/**
 	 * Function for insert user detail
 	 * @param string $Username, username.
 	 * @param string $Name, name.
@@ -187,9 +213,10 @@ class UserDetailForm extends CActiveRecord
 	 * @param string $Phone, phone.
 	 * @param string $Password, password
 	 * @param boolean $Enable, enable/disable menu.
-	 * @param int $UserId, Source User Id.
+	 * @param string userAccess,  array of menu id which want assign to user.
+	 * @param string userGroup,  array of group id which want assign to user.
 	*/
-	public function insertUser($Username, $Name, $Email, $Phone, $Password, $Enable, $Copy_User, $UserId)
+	public function insertUser($Username, $Name, $Email, $Phone, $Password, $Enable, $isChange, $userAccess, $userGroup)
 	{
 		$response = array('code'=>'', 'exception'=>'');
 		$connection=Yii::app()->db;
@@ -199,46 +226,32 @@ class UserDetailForm extends CActiveRecord
 		$transaction=$connection->beginTransaction();
 		try
 		{ 
-			$sql = "call Spr_Insert_User ('".$Username."', '".$Name."', '".$Email."', 
-				'".$Phone."','". CPasswordHelper::hashPassword($Password)."','".$Enable."', '".$userin."')";
-			$command=$connection->createCommand($sql);
-			$status=$command->execute();
-			
-			if(isset($UserId) && $UserId != null && $UserId != "" && isset($Copy_User) && $Copy_User != null && $Copy_User != "" ){
-				copyUserAccess($Username, $UserId, $transaction);
+			$id = 0;
+			if ($isChange == "1"){
+				$sql = "call Spr_Insert_User ('".$Username."', '".$Name."', '".$Email."', 
+					'".$Phone."','". CPasswordHelper::hashPassword($Password)."','".$Enable."', '".$userin."')";
+				$command=$connection->createCommand($sql);				
+				$dataReader=$command->query();
+				$rows=$dataReader->readAll();
+				$id = $rows[0]["UserId"];
+				$dataReader->close();
 			}
+				
+			$command = false;
+			
+			for($i = 0; $i < count($userAccess); $i++){
+				$sql = "call Spr_Insert_Update_User_Access (".$id.", ".$userAccess[$i].",'".$userin."')";
+				$command=$connection->createCommand($sql);
+				$status=$command->execute();
+			}
+			
+			for($i = 0; $i < count($groupUser); $i++){
+				$sql = "call Spr_Insert_Update_User_Group (".$id.", ".$userGroup[$i].",'".$userin."')";
+				$command=$connection->createCommand($sql);
+				$status=$command->execute();
+			}
+			
 
-		   	$transaction->commit();
-		   	$response['code'] = StandardVariable::CONSTANT_RETURN_SUCCESS;
-		}
-		catch(Exception $e)
-		{
-			$response['code'] = StandardVariable::CONSTANT_RETUNN_ERROR;
-			$response['exception'] = $e->errorInfo;			
-		   	$transaction->rollback();
-		}
-		
-		return $response;
-	}
-
-	/**
-	 * Function for copy user access
-	 * @param string $Username, destination username.
-	 * @param int $UserId, source user.
-	 * @param object $transaction, Sql Transaction.
-	*/
-	public function copyUserAccess($Username, $UserId, $transaction)
-	{
-		$response = array('code'=>'', 'exception'=>'');
-		$connection=Yii::app()->db;
-		$connection->active=true;
-		$userin=GlobalFunction::getLoginUserName();
-		
-		try
-		{ 
-			$sql = "call Spr_Copy_User_Access ('".$Username."', ".$UserId.", '".$userin."')";
-			$command=$connection->createCommand($sql);
-			$status=$command->execute();
 		   	$transaction->commit();
 		   	$response['code'] = StandardVariable::CONSTANT_RETURN_SUCCESS;
 		}
@@ -284,15 +297,17 @@ class UserDetailForm extends CActiveRecord
 
 	/**
 	 * Function for update user detail
+	 * @param string $UserId, userid.
 	 * @param string $Username, username.
 	 * @param string $Name, name.
 	 * @param string $Email, email.
 	 * @param string $Phone, phone.
 	 * @param string $Password, password
 	 * @param boolean $Enable, enable/disable menu.
-	 * @param int $UserId, Source User Id.
+	 * @param string userAccess,  array of menu id which want assign to user.
+	 * @param string userGroup,  array of group id which want assign to user.
 	*/
-	public function updateUser($Username, $Name, $Email, $Phone, $Password, $Enable, $Copy_User, $UserId)
+	public function updateUser($UserId, $Username, $Name, $Email, $Phone, $Password, $Enable, $isChange, $userAccess, $userGroup)
 	{
 		$response = array('code'=>'', 'exception'=>'');
 		$connection=Yii::app()->db;
@@ -301,19 +316,49 @@ class UserDetailForm extends CActiveRecord
 		
 		$transaction=$connection->beginTransaction();
 		try
-		{ 
+		{ 			
 			if($Password == StandardVariable::CONSTANT_PASSWORD)
 				$Password = 'NULL';
 			else 
 				$Password = "'".CPasswordHelper::hashPassword($Password)."'";
 
-			$sql = "call Spr_Update_User ('".$Username."', '".$Name."', '".$Email."', 
-				'".$Phone."',".$Password.",'".$Enable."', '".$userin."')";
-			$command=$connection->createCommand($sql);
-			$status=$command->execute();
+			if ($isChange == "1"){
+				$sql = "call Spr_Update_User ('".$Username."', '".$Name."', '".$Email."', 
+					'".$Phone."',".$Password.",'".$Enable."', '".$userin."')";
+				$command=$connection->createCommand($sql);
+				$status=$command->execute();
+			}
+
+			$command = false;
+			$strParamAccess= "";
+
+			for($i = 0; $i < count($userAccess); $i++){
+				$strParamAccess = $strParamAccess.','.$userAccess[$i];
+				$sql = "call Spr_Insert_Update_User_Access (".$UserId.", ".$userAccess[$i].",'".$userin."')";
+				$command=$connection->createCommand($sql);
+				$status=$command->execute();
+			}
+			var_dump("Spr_Delete_User_Access (".$UserId.", '".$strParamAccess."', '".$userin."')");
+			if (count($userAccess) > 0){
+				$strParamAccess = substr($strParamAccess, 1);
+				$sql = "call Spr_Delete_User_Access (".$UserId.", '".$strParamAccess."', '".$userin."')";
+				$command=$connection->createCommand($sql);
+				$status=$command->execute();
+			}
 			
-			if(isset($UserId) && $UserId != null && $UserId != "" && isset($Copy_User) && $Copy_User != null && $Copy_User != "" ){
-				copyUserAccess($Username, $UserId, $transaction);
+			$strParamUser = "";
+			for($i = 0; $i < count($userGroup); $i++){
+				$strParamUser = $strParamUser.','.$userGroup[$i];
+				$sql = "call Spr_Insert_Update_User_Group (".$UserId.", ".$userGroup[$i].",'".$userin."')"; 
+				$command=$connection->createCommand($sql);
+				$status=$command->execute();
+			}
+			
+			if (count($userGroup) > 0){
+				$strParamUser = substr($strParamUser, 1);
+				$sql = "call Spr_Delete_User_Group (".$UserId.", '".$strParamUser."', '".$userin."')";
+				$command=$connection->createCommand($sql);
+				$status=$command->execute();
 			}
 
 		   	$transaction->commit();

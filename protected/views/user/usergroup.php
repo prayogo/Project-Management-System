@@ -1,4 +1,5 @@
-<div class="panel panel-default">
+<div class="panel panel-default" id="user-group">
+	<?php echo $form->hiddenField($model_user,'isChange') ?>
 	<div class="panel-body">
 	    <div class="form-horizontal" role="form"> 
             <table id="tblUserGroup" width="100%">
@@ -28,6 +29,11 @@
 </div>
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.dataTables.js"></script> 
 <script>
+	
+	$('#user-group').change(function(e){
+		$('#UserGroupForm_isChange').val('1');
+	});
+
 	var checkedGroup = new Array();
 	<?php
 		if (isset($checkGroup)){
@@ -42,12 +48,13 @@
 		url: '<?php echo Yii::app()->request->baseUrl;?>/user/UserGroupList',
 		data: {"ajax":"1"},
 		dataType: "json",
-		success: AjaxGetFieldDataSucceeded,
+		success: AjaxGetFieldDataSucceededGroup,
 		//error: AjaxGetFieldDataFailed
 	});
 	
-	function AjaxGetFieldDataSucceeded(result) {
-		$('#tblUserGroup').dataTable({
+	function AjaxGetFieldDataSucceededGroup(result) {
+		$('#tblGroupUser').dataTable().fnDestroy();
+		$('#tblGroupUser').dataTable({
 			"order": [[ 2, "asc"]],
 			"bProcessing": true,
 			"aaData": result,
