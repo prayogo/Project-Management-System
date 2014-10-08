@@ -56,6 +56,8 @@ class GroupController extends Controller
 								array_push($checkAccess, $key);
 							}
 						}
+					}else{
+						array_push($checkAccess, 0);	
 					}
 					
 				}
@@ -71,6 +73,8 @@ class GroupController extends Controller
 							  	array_push($checkUser, $key);
 						  	}
 					  	}
+					}else{
+						array_push($checkUser, 0);
 					}
 					
 				}

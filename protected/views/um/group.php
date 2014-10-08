@@ -72,6 +72,28 @@ $this->breadcrumbs=array(
 					{ 'visible': false,  'targets': [ 0 ] },
 					{ 'targets': [ 3 ], 'orderable': false }
 				],
+				'fnInitComplete':function(){
+					$('.delete').click(function(e){
+						bootbox.dialog({
+						  message: "Are you sure want to delete?",
+						  title: "<span class='glyphicon glyphicon-question-sign'></span> Delete Group",
+						  buttons: {
+							 cancel: {
+								label: "Cancel",
+								className: "btn-default",
+							},
+							main: {
+							  label: "OK",
+							  className: "btn-primary",
+							  callback: function() {
+								$($(e)[0].currentTarget).closest('form').submit();
+							  }
+							}
+						  }
+						});
+						event.preventDefault();
+					});
+				}
 			});
 		}
 	</script> 
