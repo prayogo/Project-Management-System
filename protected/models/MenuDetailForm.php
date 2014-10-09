@@ -214,7 +214,7 @@ class MenuDetailForm extends CActiveRecord
 		$transaction=$connection->beginTransaction();
 		try
 		{ 
-			$sql = "call Spr_Delete_Maenu (".$MenuId.",'".$username."')";
+			$sql = "call Spr_Delete_Menu (".$MenuId.",'".$username."')";
 			$command=$connection->createCommand($sql);
 			$status=$command->execute();
 		   	$transaction->commit();
