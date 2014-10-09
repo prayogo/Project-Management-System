@@ -240,15 +240,19 @@ class UserDetailForm extends CActiveRecord
 			$command = false;
 			
 			for($i = 0; $i < count($userAccess); $i++){
-				$sql = "call Spr_Insert_Update_User_Access (".$id.", ".$userAccess[$i].",'".$userin."')";
-				$command=$connection->createCommand($sql);
-				$status=$command->execute();
+				if($userAccess[i] != 0){
+					$sql = "call Spr_Insert_Update_User_Access (".$id.", ".$userAccess[$i].",'".$userin."')";
+					$command=$connection->createCommand($sql);
+					$status=$command->execute();
+				}
 			}
 			
-			for($i = 0; $i < count($groupUser); $i++){
-				$sql = "call Spr_Insert_Update_User_Group (".$id.", ".$userGroup[$i].",'".$userin."')";
-				$command=$connection->createCommand($sql);
-				$status=$command->execute();
+			for($i = 0; $i < count($userGroup); $i++){
+				if($userGroup[i] != 0){
+					$sql = "call Spr_Insert_Update_User_Group (".$id.", ".$userGroup[$i].",'".$userin."')";
+					$command=$connection->createCommand($sql);
+					$status=$command->execute();
+				}
 			}
 			
 
@@ -334,9 +338,11 @@ class UserDetailForm extends CActiveRecord
 
 			for($i = 0; $i < count($userAccess); $i++){
 				$strParamAccess = $strParamAccess.','.$userAccess[$i];
-				$sql = "call Spr_Insert_Update_User_Access (".$UserId.", ".$userAccess[$i].",'".$userin."')";
-				$command=$connection->createCommand($sql);
-				$status=$command->execute();
+				if ($userAccess[$i] != 0){
+					$sql = "call Spr_Insert_Update_User_Access (".$UserId.", ".$userAccess[$i].",'".$userin."')";
+					$command=$connection->createCommand($sql);
+					$status=$command->execute();
+				}
 			}
 			if (count($userAccess) > 0){
 				$strParamAccess = substr($strParamAccess, 1);
@@ -348,9 +354,11 @@ class UserDetailForm extends CActiveRecord
 			$strParamUser = "";
 			for($i = 0; $i < count($userGroup); $i++){
 				$strParamUser = $strParamUser.','.$userGroup[$i];
-				$sql = "call Spr_Insert_Update_User_Group (".$UserId.", ".$userGroup[$i].",'".$userin."')"; 
-				$command=$connection->createCommand($sql);
-				$status=$command->execute();
+				if($userGroup[$i] != 0){
+					$sql = "call Spr_Insert_Update_User_Group (".$UserId.", ".$userGroup[$i].",'".$userin."')"; 
+					$command=$connection->createCommand($sql);
+					$status=$command->execute();
+				}
 			}
 			
 			if (count($userGroup) > 0){
