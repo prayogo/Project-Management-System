@@ -4,14 +4,14 @@
 /* @var $form CActiveForm */
 ?>
 
-<div class="panel panel-default">
+<div class="panel panel-default" id="user-detail">
 
 <div class="panel-body">
     <div class="form-horizontal" role="form">    
     
 	<?php echo $form->hiddenField($model_detail,'UserId') ?>
-	<!-- <p class="note">Fields with <span class="required">*</span> are required.</p> -->
-
+    <?php echo $form->hiddenField($model_detail,'isChange') ?>
+	
 	<div class="form-group">
         <div class="col-1"><span class="pull-right"></span>
         	<?php echo $form->labelEx($model_detail,'Username', array('class'=>'control-label col-lg-2')); ?>
@@ -115,18 +115,49 @@
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/js/select2/select2.js"></script>
 
 <script>
+    
+    $('#user-detail').change(function(e){
+        $('#UserDetailForm_isChange').val('1');
+    });
 
 	function enabled_form(id){
+        $(".User").select2('val', '', true);
 		$('.enable_form').css('display', id.attr('checked') ? '' :'none');
 	}
 
     $('.check').change(enabled_form($('.check')));
 
+    $(".User").change(function(e) { 
+        var paramUserId = 0;
+        if ($('.check').attr('checked')){
+            paramUserId = e.val;
+        }else{
+            paramUserId = 0;
+        }
+        $.ajax({
+            type: "POST",
+            url: '<?php echo Yii::app()->request->baseUrl;?>/user/UserAccessList',
+            data: {"ajax":"1","userid":paramUserId},
+            dataType: "json",
+            success: AjaxGetFieldDataSucceededAccess,
+            //error: AjaxGetFieldDataFailed
+        });
+        
+        $.ajax({
+            type: "POST",
+            url: '<?php echo Yii::app()->request->baseUrl;?>/user/UserGroupList',
+            data: {"ajax":"1","userid":paramUserId},
+            dataType: "json",
+            success: AjaxGetFieldDataSucceededGroup,
+            //error: AjaxGetFieldDataFailed
+        });
+    })
+
     $(".User").select2({
         placeholder: '',
         query: function(query) {
             $.ajax({
-                url: "<?php echo Yii::app()->request->baseUrl;?>/user/GetUserList", 
+                url: "<?php echo Yii::app()->request->baseUrl;?>/user/CopyUserList", 
                 data: { ajax: 1, userid: <?php echo (isset($model_detail->UserId) && $model_detail->UserId != "") ? $model_detail->UserId : 0 ?>, },
                 dataType: 'json',
                 type: "POST",
@@ -144,7 +175,7 @@
         initSelection: function(element, callback) {
             var id = $(element).val();
             if(id !== "") {
-                $.ajax("http://localhost/Project-Management-System/user/GetUserList", {
+                $.ajax("<?php echo Yii::app()->request->baseUrl;?>/user/CopyUserList", {
                     data: {id: id, ajax: 1, userid: <?php echo (isset($model_detail->UserId) && $model_detail->UserId != "") ? $model_detail->UserId : 0 ?>},
                     dataType: "json", type: "POST"
                 }).done(function(data) {

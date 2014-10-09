@@ -1,4 +1,5 @@
-<div class="panel panel-default">
+<div class="panel panel-default" id="user-access">
+	<?php echo $form->hiddenField($model_access,'isChange') ?>
 	<div class="panel-body">
 	    <div class="form-horizontal" role="form"> 
         	<table id="tblUserAccess" class="table striped hovered dataTable" width="100%">
@@ -28,6 +29,11 @@
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.dataTables.js"></script> 
 
 <script>
+
+	$('#user-access').change(function(e){
+		$('#UserAccessForm_isChange').val('1');
+	});
+
 	var checkedAccess = new Array();
 	<?php
 		if (isset($checkAccess)){
@@ -42,11 +48,12 @@
 		url: '<?php echo Yii::app()->request->baseUrl;?>/user/UserAccessList',
 		data: {"ajax":"1"},
 		dataType: "json",
-		success: AjaxGetFieldDataSucceeded,
+		success: AjaxGetFieldDataSucceededAccess,
 		//error: AjaxGetFieldDataFailed
 	});
 	
-	function AjaxGetFieldDataSucceeded(result) {
+	function AjaxGetFieldDataSucceededAccess(result) {
+		$('#tblUserAccess').dataTable().fnDestroy();
 		$('#tblUserAccess').dataTable({
 			"order": [[ 2, "asc"]],
 			"bProcessing": true,
@@ -69,7 +76,8 @@
 					}
 				},
 				{ 'visible': false,  'targets': [ 1 ] },
-				{ 'targets': [ 0 ], 'orderable': false }
+				{ 'targets': [ 0 ], 'orderable': false },
+				{ "width": "5%", "targets": 0 }
 			],
 		});
 	}

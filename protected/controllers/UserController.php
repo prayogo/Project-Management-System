@@ -58,18 +58,54 @@ class UserController extends Controller
 				$model_detail->Enable = $_POST['UserDetailForm']['Enable'];				
 				$model_detail->Copy_User = $_POST['UserDetailForm']['Copy_User'];
 				$model_detail->User = $_POST['UserDetailForm']['User'];
+				$model_detail->isChange=$_POST['UserDetailForm']['isChange'];
 				
-
+				if (isset($_POST['UserAccessForm']['isChange']) && $_POST['UserAccessForm']['isChange'] != null && $_POST['UserAccessForm']['isChange'] != ""){
+					
+					if (isset($_POST['UserAccessForm']["UserAccess"])){
+						$activeTab = "useraccess";
+						$model_access->isChange=$_POST['UserAccessForm']['isChange'];
+						foreach ($_POST['UserAccessForm']["UserAccess"] as $key => $value) {
+							if ($value == "on"){
+								array_push($checkAccess, $key);
+							}
+						}
+					}
+					else{
+						array_push($checkAccess, 0);
+					}
+					
+				}
+				
+				if (isset($_POST['UserGroupForm']['isChange']) && $_POST['UserGroupForm']['isChange'] != null && $_POST['UserGroupForm']['isChange'] != ""){
+					
+					if (isset($_POST['UserGroupForm']["UserGroup"])){
+						$activeTab = "usergroup";
+					  	$model_user->isChange=$_POST['UserGroupForm']['isChange'];
+					  	foreach ($_POST['UserGroupForm']["UserGroup"] as $key => $value) {
+						  	if ($value == "on"){
+							  	array_push($checkGroup, $key);
+						  	}
+					  	}
+					}
+				  	else{
+				  		array_push($checkGroup, 0);
+				  	}
+				}
 
 				$response = $model_detail->getUserDetail($model_detail->UserId);
 				
 				if ($model_detail->UserId != null && $model_detail->UserId != ""){					
 					if (!empty($response) && isset($response[0]['UserId'])){						
-						$response1 = $model_detail->updateUser($model_detail->Username, $model_detail->Name, $model_detail->Email, $model_detail->Phone, $model_detail->Password, $model_detail->Enable, $model_detail->Copy_User, $model_detail->User);
+						$response1 = $model_detail->updateUser($model_detail->UserId, $model_detail->Username, $model_detail->Name, $model_detail->Email, $model_detail->Phone, $model_detail->Password, $model_detail->Enable, $model_detail->isChange, $checkAccess, $checkGroup);
 						if ($response1['code'] == StandardVariable::CONSTANT_RETURN_SUCCESS){
 							$this->redirect(array('um/user'));
 						}else{
-							$model_detail->addError('request', $response1['exception'][2]);
+							if (isset($response1['exception'][2])){
+								$model_detail->addError('request', $response1['exception'][2]);
+							}else{
+								$model_detail->addError('request', 'Oops, something wrong. Please try again later.');
+							}
 						}
 					}
 					else{
@@ -77,11 +113,15 @@ class UserController extends Controller
 					}
 				}
 				else{
-					$response1 = $model_detail->insertUser($model_detail->Username, $model_detail->Name, $model_detail->Email, $model_detail->Phone, $model_detail->Password, $model_detail->Enable, $model_detail->Copy_User, $model_detail->User);
+					$response1 = $model_detail->insertUser($model_detail->Username, $model_detail->Name, $model_detail->Email, $model_detail->Phone, $model_detail->Password, $model_detail->Enable, $model_detail->isChange, $checkAccess, $checkGroup);
 					if ($response1['code'] == StandardVariable::CONSTANT_RETURN_SUCCESS){						
 						$this->redirect(array('um/user'));
 					}else{
-						$model_detail->addError('request', $response1['exception'][2]);
+						if (isset($response1['exception'][2])){
+							$model_detail->addError('request', $response1['exception'][2]);
+						}else{
+							$model_detail->addError('request', 'Oops, something wrong. Please try again later.');
+						}
 					}
 				}
 			}
@@ -90,36 +130,36 @@ class UserController extends Controller
 			if (isset($paramURL) && $paramURL != null && $paramURL != ""){
 				$response = $model_detail->getUserDetail($paramURL);
 				if (!empty($response) && isset($response[0]['UserId'])){
-					  $model_detail->UserId = $response[0]['UserId'];
-					  $model_detail->Username = $response[0]['Username'];
-					  $model_detail->Name = $response[0]['Name'];
-					  $model_detail->Email = $response[0]['Email'];
-					  $model_detail->Phone = $response[0]['Phone'];					  
-					  $model_detail->Enable = $response[0]['Enable'];
-					  $model_detail->Password = StandardVariable::CONSTANT_PASSWORD;
-					  $model_detail->Confirm_Password = StandardVariable::CONSTANT_PASSWORD;
+					$model_detail->UserId = $response[0]['UserId'];
+					$model_detail->Username = $response[0]['Username'];
+					$model_detail->Name = $response[0]['Name'];
+					$model_detail->Email = $response[0]['Email'];
+					$model_detail->Phone = $response[0]['Phone'];					  
+					$model_detail->Enable = $response[0]['Enable'];
+					$model_detail->Password = StandardVariable::CONSTANT_PASSWORD;
+					$model_detail->Confirm_Password = StandardVariable::CONSTANT_PASSWORD;
+
+					$response2 = $model_access->getUserAccessList($model_detail->UserId);
+					if (!isset($response2['code'])){
+						foreach ($response2 as $row) {
+							if ($row["canAccess"] == "1"){
+								array_push($checkAccess, $row["MenuId"]);
+							}
+						}
+					}
+						
+					$response3 = $model_user->getUserGroupList($model_detail->UserId);
+					if (!isset($response3['code'])){
+						foreach ($response3 as $row) {
+							if ($row["canAccess"] == "1"){
+								array_push($checkGroup, $row["HGroupId"]);
+							}
+						}
+					}
 				  }
 			}	
 		}
 
-		if (isset($_POST['UserAccessForm']["UserAccess"])){
-			$activeTab = "useraccess";
-			foreach ($_POST['UserAccessForm']["UserAccess"] as $key => $value) {
-				if ($value == "on"){
-					array_push($checkAccess, $key);
-				}
-			}
-		}
-		
-		if (isset($_POST['UserGroupForm']["UserGroup"])){
-			$activeTab = "usergroup";
-			foreach ($_POST['UserGroupForm']["UserGroup"] as $key => $value) {
-				if ($value == "on"){
-					array_push($checkGroup, $key);
-				}
-			}
-		}
-				
 		$this->render('manageuser', array(
 			'activeTab'=>$activeTab,
 			'model_detail'=>$model_detail, 
@@ -146,13 +186,34 @@ class UserController extends Controller
 		echo json_encode($userList);
 	}
 
+	public function actionCopyUserList(){
+		$model=new UserDetailForm;
+		$userList = array();
+		$currId = "0";
+		$copyId = "NULL";
+
+		if (isset($_POST['ajax']) && $_POST['ajax'] != null && $_POST['ajax'] != ""){
+			if (isset($_POST['userid']) && $_POST['userid'] != null && $_POST['userid'] != ""){
+				$currId = $_POST['userid'];
+			}
+			if (isset($_POST['User']) && $_POST['User'] != null && $_POST['User'] != ""){
+				$copyId = $_POST['User'];
+				$userList = $model->getCopyUserList($currId, $copyId);
+			}else{
+				$userList = $model->getCopyUserList($currId, $copyId);
+				array_unshift($userList, array('UserId'=>'0', 'Username'=>''));
+			}			
+		}
+		echo json_encode($userList);
+	}
+
 	public function actionUserAccessList(){
 		$model=new UserAccessForm;
 		$UserId = "0";
 		$accessList = array();
 		if (isset($_POST['ajax']) && $_POST['ajax'] != null && $_POST['ajax'] != ""){
 			if (isset($_POST['userid']) && $_POST['userid'] != null && $_POST['userid'] != ""){
-				$UserId = $_POST['UserId'];
+				$UserId = $_POST['userid'];
 			}
 			
 			$accessList = $model->getUserAccessList($UserId);
@@ -166,7 +227,7 @@ class UserController extends Controller
 		$accessList = array();
 		if (isset($_POST['ajax']) && $_POST['ajax'] != null && $_POST['ajax'] != ""){
 			if (isset($_POST['userid']) && $_POST['userid'] != null && $_POST['userid'] != ""){
-				$UserId = $_POST['UserId'];
+				$UserId = $_POST['userid'];
 			}
 			
 			$accessList = $model->getUserGroupList($UserId);

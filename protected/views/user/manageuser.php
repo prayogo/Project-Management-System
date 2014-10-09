@@ -53,7 +53,8 @@ $this->breadcrumbs=array(
               ),
           ),
           'cssFile'=>false,
-          'activeTab'=>$activeTab
+          'activeTab'=>$activeTab,
+          'id'=>'tab_userdetail',
       ));
     ?>   
   <?php $this->endWidget(); ?>    

@@ -1,13 +1,14 @@
-<div class="panel panel-default">
+<div class="panel panel-default" id="user-group">
+	<?php echo $form->hiddenField($model_user,'isChange') ?>
 	<div class="panel-body">
 	    <div class="form-horizontal" role="form"> 
             <table id="tblUserGroup" width="100%">
               <thead>
                 <tr>
-                  <th style="width:5%"></th>
+                  <th ></th>
                   <th>HGroupId</th>
-                  <th style="width:20%">Group Name</th>
-                  <th style="width:50%">Description</th>                  
+                  <th >Group Name</th>
+                  <th >Description</th>                  
                 </tr>
               </thead>
               <tbody>
@@ -28,6 +29,11 @@
 </div>
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.dataTables.js"></script> 
 <script>
+	
+	$('#user-group').change(function(e){
+		$('#UserGroupForm_isChange').val('1');
+	});
+
 	var checkedGroup = new Array();
 	<?php
 		if (isset($checkGroup)){
@@ -42,13 +48,14 @@
 		url: '<?php echo Yii::app()->request->baseUrl;?>/user/UserGroupList',
 		data: {"ajax":"1"},
 		dataType: "json",
-		success: AjaxGetFieldDataSucceeded,
+		success: AjaxGetFieldDataSucceededGroup,
 		//error: AjaxGetFieldDataFailed
 	});
 	
-	function AjaxGetFieldDataSucceeded(result) {
+	function AjaxGetFieldDataSucceededGroup(result) {
+		$('#tblUserGroup').dataTable().fnDestroy();
 		$('#tblUserGroup').dataTable({
-			"order": [[ 2, "asc"]],
+			"order": [[ 2, "asc"]],	
 			"bProcessing": true,
 			"aaData": result,
 			"aoColumns": [
@@ -63,14 +70,15 @@
 					'mData': 'canAccess',
 					'mRender': function ( data, type, row ) {
 						var checked = data == 0 ? "" : "checked";
-						if (jQuery.inArray(row.GroupId, checkedUser) >= 0){
+						if (jQuery.inArray(row.HGroupId, checkedGroup) >= 0){
 							checked = "checked";
 						}
-						return '<input name="UserGroupForm[UserGroup]['+row.GroupId+']" type="checkbox" '+checked+'/>';
+						return '<input name="UserGroupForm[UserGroup]['+row.HGroupId+']" type="checkbox" '+checked+'/>';
 					}
 				},
 				{ 'visible': false,  'targets': [ 1 ] },
-				{ 'targets': [ 0 ], 'orderable': false }
+				{ 'targets': [ 0 ], 'orderable': false },
+				{ "width": "5%", "targets": 0 }
 			],
 		});
 	}

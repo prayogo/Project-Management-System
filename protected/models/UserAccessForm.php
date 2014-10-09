@@ -11,6 +11,7 @@
 class UserAccessForm extends CActiveRecord
 {
 	public $canAccess = false;
+	public $isChange = false;
 	/**
 	 * @return string the associated database table name
 	 */
