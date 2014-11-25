@@ -6,7 +6,24 @@ class PmsController extends Controller
 	
 	public function actionCustomer()
 	{
-		$this->render('customer');
+		$model=new CustomerForm;
+
+		if (isset($_POST['CustomerForm'])){
+			if ($_POST['CustomerForm']['UserId'] != null && $_POST['CustomerForm']['UserId'] != ""){
+				$response1 = $model->deleteCustomer($_POST['CustomerForm']['UserId']);
+				if ($response1['code'] == StandardVariable::CONSTANT_RETURN_SUCCESS){
+					$this->refresh();
+				}else{
+					if (isset($response1['exception'][2])){
+						$model->addError('request', $response1['exception'][2]);
+					}else{
+						$model->addError('request', 'Oops, something wrong. Please try again later.');
+					}
+				}
+			}
+		}
+		
+		$this->render('customer', array('model'=>$model));
 	}
 
 	public function actionProject ()
@@ -32,6 +49,17 @@ class PmsController extends Controller
 	public function actionPayment ()
 	{
 		$this->render('payment');
+	}
+	
+	public function actionGetCustomerList(){
+		if(isset($_POST['ajax']))
+		{
+			$model=new CustomerForm;
+			$response = $model->getCustomerList();			
+			echo(json_encode($response));	
+		}else{
+			$this->redirect(array('pms/customer'));
+		}
 	}
 	
 	// Uncomment the following methods and override them if needed
