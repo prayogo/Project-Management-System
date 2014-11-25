@@ -89,7 +89,7 @@ $this->breadcrumbs=array(
 				'fnInitComplete':function(){
 					$('.delete').click(function(e){
 						bootbox.dialog({
-						  message: "Are you sure want to delete?",
+						  message: "Are you sure want to delete? <br/>If menu contain child, all child will be deleted.",
 						  title: "<span class='glyphicon glyphicon-question-sign'></span> Delete Menu",
 						  buttons: {
 							 cancel: {
