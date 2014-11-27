@@ -46,26 +46,6 @@
 		<?php echo $form->textField($model,'DepartmentId'); ?>
 	</div>
 
-	<div class="row">
-		<?php echo $form->label($model,'UserIn'); ?>
-		<?php echo $form->textField($model,'UserIn',array('size'=>50,'maxlength'=>50)); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->label($model,'DateIn'); ?>
-		<?php echo $form->textField($model,'DateIn'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->label($model,'UserUp'); ?>
-		<?php echo $form->textField($model,'UserUp',array('size'=>50,'maxlength'=>50)); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->label($model,'DateUp'); ?>
-		<?php echo $form->textField($model,'DateUp'); ?>
-	</div>
-
 	<div class="row buttons">
 		<?php echo CHtml::submitButton('Search'); ?>
 	</div>

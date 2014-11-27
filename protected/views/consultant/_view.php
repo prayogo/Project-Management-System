@@ -26,7 +26,7 @@
 	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('CategoryId')); ?>:</b>
-	<?php echo CHtml::encode($data->CategoryId); ?>
+	<?php echo CHtml::encode($data->Category->Category); ?>
 	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('DepartmentId')); ?>:</b>

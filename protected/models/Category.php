@@ -29,13 +29,19 @@ class Category extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('Category, UserIn, DateIn', 'required'),
+			array('Category', 'required'),
 			array('Category', 'length', 'max'=>250),
 			array('UserIn, UserUp', 'length', 'max'=>50),
 			array('DateUp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('CategoryId, Category, UserIn, DateIn, UserUp, DateUp', 'safe', 'on'=>'search'),
+			array('CategoryId, Category', 'safe', 'on'=>'search'),
+			array('DateIn','default',
+              'value'=>new CDbExpression('NOW()'),
+              'setOnEmpty'=>false,'on'=>'insert'),
+			array('DateUp','default',
+              'value'=>new CDbExpression('NOW()'),
+              'setOnEmpty'=>false,'on'=>'update'),
 		);
 	}
 
@@ -47,6 +53,7 @@ class Category extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'consultants' => array(self::HAS_MANY, 'Consultant', 'CategoryId'),
 		);
 	}
 
@@ -56,12 +63,12 @@ class Category extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'CategoryId' => 'Category',
+			'CategoryId' => 'CategoryId',
 			'Category' => 'Category',
-			'UserIn' => 'User In',
-			'DateIn' => 'Date In',
-			'UserUp' => 'User Up',
-			'DateUp' => 'Date Up',
+			'UserIn' => 'UserIn',
+			'DateIn' => 'DateIn',
+			'UserUp' => 'UserUp',
+			'DateUp' => 'DateUp',
 		);
 	}
 

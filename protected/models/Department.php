@@ -1,29 +1,26 @@
 <?php
 
 /**
- * This is the model class for table "msconsultant".
+ * This is the model class for table "ltdepartment".
  *
- * The followings are the available columns in table 'msconsultant':
- * @property integer $ConsultantId
- * @property string $LectureId
- * @property string $EmployeeId
- * @property string $Name
- * @property string $ResidentId
- * @property integer $CategoryId
+ * The followings are the available columns in table 'ltdepartment':
  * @property integer $DepartmentId
+ * @property string $Department
+ * @property integer $FacultyId
+ * @property string $Enable
  * @property string $UserIn
  * @property string $DateIn
  * @property string $UserUp
  * @property string $DateUp
  */
-class Consultant extends CActiveRecord
+class Department extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'msconsultant';
+		return 'ltdepartment';
 	}
 
 	/**
@@ -34,16 +31,15 @@ class Consultant extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('Name, ResidentId, CategoryId, DepartmentId', 'required'),
-			array('CategoryId, DepartmentId', 'numerical', 'integerOnly'=>true),
-			array('LectureId', 'length', 'max'=>11),
-			array('EmployeeId', 'length', 'max'=>15),
-			array('Name', 'length', 'max'=>250),
-			array('ResidentId, UserIn, UserUp', 'length', 'max'=>50),
+			array('Department, FacultyId', 'required'),
+			array('FacultyId', 'numerical', 'integerOnly'=>true),
+			array('Department', 'length', 'max'=>250),
+			array('Enable', 'length', 'max'=>1),
+			array('UserIn, UserUp', 'length', 'max'=>50),
 			array('DateIn, DateUp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('ConsultantId, LectureId, EmployeeId, Name, ResidentId, CategoryId, DepartmentId', 'safe', 'on'=>'search'),
+			array('DepartmentId, Department, FacultyId, Enable', 'safe', 'on'=>'search'),
 			array('DateIn','default',
               'value'=>new CDbExpression('NOW()'),
               'setOnEmpty'=>false,'on'=>'insert'),
@@ -61,8 +57,6 @@ class Consultant extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'Category' => array(self::BELONGS_TO, 'Category', 'CategoryId'),
-			//'Department'=>array(self::MANY_MANY, 'Department','DepartmentId'),
 		);
 	}
 
@@ -72,13 +66,10 @@ class Consultant extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'ConsultantId' => 'ConsultantId',
-			'LectureId' => 'Lecture Id',
-			'EmployeeId' => 'Employee Id',
-			'Name' => 'Name',
-			'ResidentId' => 'ResidentId',
-			'CategoryId' => 'Category',
-			'DepartmentId' => 'Department',
+			'DepartmentId' => 'DepartmentId',
+			'Department' => 'Department',
+			'FacultyId' => 'FacultyId',
+			'Enable' => 'Enable',
 			'UserIn' => 'UserIn',
 			'DateIn' => 'DateIn',
 			'UserUp' => 'UserUp',
@@ -104,13 +95,10 @@ class Consultant extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('ConsultantId',$this->ConsultantId);
-		$criteria->compare('LectureId',$this->LectureId,true);
-		$criteria->compare('EmployeeId',$this->EmployeeId,true);
-		$criteria->compare('Name',$this->Name,true);
-		$criteria->compare('ResidentId',$this->ResidentId,true);
-		$criteria->compare('CategoryId',$this->CategoryId);
 		$criteria->compare('DepartmentId',$this->DepartmentId);
+		$criteria->compare('Department',$this->Department,true);
+		$criteria->compare('FacultyId',$this->FacultyId);
+		$criteria->compare('Enable',$this->Enable,true);
 		$criteria->compare('UserIn',$this->UserIn,true);
 		$criteria->compare('DateIn',$this->DateIn,true);
 		$criteria->compare('UserUp',$this->UserUp,true);
@@ -125,7 +113,7 @@ class Consultant extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return Consultant the static model class
+	 * @return Department the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

@@ -55,30 +55,6 @@
 		<?php echo $form->error($model,'DepartmentId'); ?>
 	</div>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'UserIn'); ?>
-		<?php echo $form->textField($model,'UserIn',array('size'=>50,'maxlength'=>50)); ?>
-		<?php echo $form->error($model,'UserIn'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'DateIn'); ?>
-		<?php echo $form->textField($model,'DateIn'); ?>
-		<?php echo $form->error($model,'DateIn'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'UserUp'); ?>
-		<?php echo $form->textField($model,'UserUp',array('size'=>50,'maxlength'=>50)); ?>
-		<?php echo $form->error($model,'UserUp'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'DateUp'); ?>
-		<?php echo $form->textField($model,'DateUp'); ?>
-		<?php echo $form->error($model,'DateUp'); ?>
-	</div>
-
 	<div class="row buttons">
 		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
 	</div>
