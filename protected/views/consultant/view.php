@@ -16,21 +16,22 @@ $this->menu=array(
 );
 ?>
 
-<h1>View Consultant #<?php echo $model->ConsultantId; ?></h1>
+<h1>View Consultant #<?php echo $model->Name; ?></h1>
 
 <?php $this->widget('zii.widgets.CDetailView', array(
 	'data'=>$model,
 	'attributes'=>array(
-		'ConsultantId',
+		'Name',
 		'LectureId',
 		'EmployeeId',
-		'Name',
 		'ResidentId',
-		'CategoryId',
-		'DepartmentId',
-		'UserIn',
-		'DateIn',
-		'UserUp',
-		'DateUp',
+		array(
+            'name'=>'Category',
+            'value'=>$model->Category->Category,
+		),
+		array(
+            'name'=>'Department',
+            'value'=>$model->Department->Department,
+		),
 	),
 )); ?>

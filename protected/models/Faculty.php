@@ -12,7 +12,12 @@
  * @property string $DateIn
  * @property string $UserUp
  * @property string $DateUp
+ *
+ * The followings are the available model relations:
+ * @property Ltdepartment[] $ltdepartments
  */
+ 
+ 
 class Faculty extends CActiveRecord
 {
 	/**
@@ -68,6 +73,7 @@ class Faculty extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'Department' => array(self::HAS_MANY, 'Department', 'FacultyId'),
 		);
 	}
 

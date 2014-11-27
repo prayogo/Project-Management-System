@@ -5,8 +5,8 @@
 
 <div class="view">
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('DepartmentId')); ?>:</b>
-	<?php echo CHtml::link(CHtml::encode($data->DepartmentId), array('view', 'id'=>$data->DepartmentId)); ?>
+    <b><?php echo CHtml::encode($data->getAttributeLabel('Code')); ?>:</b>
+    <?php echo CHtml::link(CHtml::encode($data->Code), array('view', 'id'=>$data->DepartmentId)); ?>
 	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('Department')); ?>:</b>
@@ -14,11 +14,11 @@
 	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('FacultyId')); ?>:</b>
-	<?php echo CHtml::encode($data->FacultyId); ?>
+	<?php echo CHtml::encode($data->Faculty->Faculty); ?>
 	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('Enable')); ?>:</b>
-	<?php echo CHtml::encode($data->Enable); ?>
+	<?php echo CHtml::encode($data->EnableText); ?>
 	<br />
 
 	<?php /*

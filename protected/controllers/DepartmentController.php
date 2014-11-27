@@ -66,7 +66,8 @@ class DepartmentController extends Controller
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
-
+		
+		$model->Enable = 1;
 		if(isset($_POST['Department']))
 		{
 			$model->attributes=$_POST['Department'];

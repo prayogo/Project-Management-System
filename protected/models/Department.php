@@ -5,6 +5,7 @@
  *
  * The followings are the available columns in table 'ltdepartment':
  * @property integer $DepartmentId
+ * @property string $Code
  * @property string $Department
  * @property integer $FacultyId
  * @property string $Enable
@@ -12,6 +13,9 @@
  * @property string $DateIn
  * @property string $UserUp
  * @property string $DateUp
+ *
+ * The followings are the available model relations:
+ * @property Ltfaculty $faculty
  */
 class Department extends CActiveRecord
 {
@@ -22,6 +26,17 @@ class Department extends CActiveRecord
 	{
 		return 'ltdepartment';
 	}
+	
+	public $varEnable;
+	public $varFaculty;
+	
+	public function getEnableText(){
+		if ($this->Enable == '1'){
+			return StandardVariable::CONSTANT_ENABLE;	
+		}else {
+			return StandardVariable::CONSTANT_DISABLE;	
+		}
+	}
 
 	/**
 	 * @return array validation rules for model attributes.
@@ -31,15 +46,16 @@ class Department extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('Department, FacultyId', 'required'),
+			array('Code, Department, FacultyId', 'required'),
 			array('FacultyId', 'numerical', 'integerOnly'=>true),
-			array('Department', 'length', 'max'=>250),
+			array('Department, varFaculty', 'length', 'max'=>250),
+			array('varEnable', 'length', 'max'=>10),
 			array('Enable', 'length', 'max'=>1),
-			array('UserIn, UserUp', 'length', 'max'=>50),
+			array('Code, UserIn, UserUp', 'length', 'max'=>50),
 			array('DateIn, DateUp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('DepartmentId, Department, FacultyId, Enable', 'safe', 'on'=>'search'),
+			array('DepartmentId, Code, Department, FacultyId, Enable, varEnable, varFaculty', 'safe', 'on'=>'search'),
 			array('DateIn','default',
               'value'=>new CDbExpression('NOW()'),
               'setOnEmpty'=>false,'on'=>'insert'),
@@ -57,6 +73,7 @@ class Department extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'Faculty' => array(self::BELONGS_TO, 'Faculty', 'FacultyId'),
 		);
 	}
 
@@ -67,13 +84,16 @@ class Department extends CActiveRecord
 	{
 		return array(
 			'DepartmentId' => 'DepartmentId',
+			'Code' => 'Code',
 			'Department' => 'Department',
-			'FacultyId' => 'FacultyId',
-			'Enable' => 'Enable',
-			'UserIn' => 'UserIn',
-			'DateIn' => 'DateIn',
-			'UserUp' => 'UserUp',
-			'DateUp' => 'DateUp',
+			'FacultyId' => 'Faculty',
+			'varFaculty' => 'Faculty',
+			'Enable' => 'Status',
+			'varEnable' => 'Status',
+			'UserIn' => 'User In',
+			'DateIn' => 'Date In',
+			'UserUp' => 'User Up',
+			'DateUp' => 'Date Up',
 		);
 	}
 
@@ -94,18 +114,35 @@ class Department extends CActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
+		$criteria->with = array('Faculty');
 
 		$criteria->compare('DepartmentId',$this->DepartmentId);
+		$criteria->compare('Code',$this->Code,true);
 		$criteria->compare('Department',$this->Department,true);
 		$criteria->compare('FacultyId',$this->FacultyId);
-		$criteria->compare('Enable',$this->Enable,true);
+		$criteria->compare('Faculty.Faculty', $this->varFaculty, true);
+		$criteria->compare('t.Enable',$this->Enable,true);
+		$criteria->compare("CASE t.Enable
+								WHEN 1 THEN 'Enable'
+								ELSE 'Disable' 
+							END", $this->varEnable, true);
 		$criteria->compare('UserIn',$this->UserIn,true);
 		$criteria->compare('DateIn',$this->DateIn,true);
 		$criteria->compare('UserUp',$this->UserUp,true);
 		$criteria->compare('DateUp',$this->DateUp,true);
 
+		$sort = new CSort();
+		$sort->attributes = array(
+			'Faculty.Faculty'=>array(
+				'asc'=>'Faculty.Faculty ASC',
+				'desc'=>'Faculty.Faculty DESC',
+			),
+			'*', // this adds all of the other columns as sortable
+		);
+
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
+			'sort'=>$sort,
 		));
 	}
 

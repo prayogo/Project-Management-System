@@ -4,7 +4,7 @@
 
 $this->breadcrumbs=array(
 	'Faculties'=>array('index'),
-	$model->FacultyId=>array('view','id'=>$model->FacultyId),
+	$model->Code=>array('view','id'=>$model->FacultyId),
 	'Update',
 );
 
@@ -16,6 +16,6 @@ $this->menu=array(
 );
 ?>
 
-<h1>Update Faculty <?php echo $model->FacultyId; ?></h1>
+<h1>Update Faculty <?php echo $model->Code; ?></h1>
 
 <?php $this->renderPartial('_form', array('model'=>$model)); ?>

@@ -15,9 +15,16 @@
  * @property string $DateIn
  * @property string $UserUp
  * @property string $DateUp
+ *
+ * The followings are the available model relations:
+ * @property Ltcategory $category
+ * @property Ltdepartment $department
  */
 class Consultant extends CActiveRecord
 {
+	public $varCategory;
+	public $varDepartment;
+	
 	/**
 	 * @return string the associated database table name
 	 */
@@ -36,14 +43,13 @@ class Consultant extends CActiveRecord
 		return array(
 			array('Name, ResidentId, CategoryId, DepartmentId', 'required'),
 			array('CategoryId, DepartmentId', 'numerical', 'integerOnly'=>true),
-			array('LectureId', 'length', 'max'=>11),
-			array('EmployeeId', 'length', 'max'=>15),
+			array('LectureId, EmployeeId', 'length', 'max'=>15),
 			array('Name', 'length', 'max'=>250),
 			array('ResidentId, UserIn, UserUp', 'length', 'max'=>50),
 			array('DateIn, DateUp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('ConsultantId, LectureId, EmployeeId, Name, ResidentId, CategoryId, DepartmentId', 'safe', 'on'=>'search'),
+			array('ConsultantId, LectureId, EmployeeId, Name, ResidentId, CategoryId, DepartmentId, varCategory, varDepartment', 'safe', 'on'=>'search'),
 			array('DateIn','default',
               'value'=>new CDbExpression('NOW()'),
               'setOnEmpty'=>false,'on'=>'insert'),
@@ -62,7 +68,7 @@ class Consultant extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'Category' => array(self::BELONGS_TO, 'Category', 'CategoryId'),
-			//'Department'=>array(self::MANY_MANY, 'Department','DepartmentId'),
+			'Department' => array(self::BELONGS_TO, 'Department', 'DepartmentId'),
 		);
 	}
 
@@ -76,9 +82,11 @@ class Consultant extends CActiveRecord
 			'LectureId' => 'Lecture Id',
 			'EmployeeId' => 'Employee Id',
 			'Name' => 'Name',
-			'ResidentId' => 'ResidentId',
+			'ResidentId' => 'Resident Id',
 			'CategoryId' => 'Category',
 			'DepartmentId' => 'Department',
+			'varCategory' => 'Category', 
+			'varDepartment' => 'Department',
 			'UserIn' => 'UserIn',
 			'DateIn' => 'DateIn',
 			'UserUp' => 'UserUp',
@@ -103,6 +111,8 @@ class Consultant extends CActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
+		
+		$criteria->with = array('Category','Department');
 
 		$criteria->compare('ConsultantId',$this->ConsultantId);
 		$criteria->compare('LectureId',$this->LectureId,true);
@@ -110,14 +120,30 @@ class Consultant extends CActiveRecord
 		$criteria->compare('Name',$this->Name,true);
 		$criteria->compare('ResidentId',$this->ResidentId,true);
 		$criteria->compare('CategoryId',$this->CategoryId);
+		$criteria->compare('Category.Category', $this->varCategory, true);
 		$criteria->compare('DepartmentId',$this->DepartmentId);
+		$criteria->compare('Department.Department', $this->varDepartment, true);
 		$criteria->compare('UserIn',$this->UserIn,true);
 		$criteria->compare('DateIn',$this->DateIn,true);
 		$criteria->compare('UserUp',$this->UserUp,true);
 		$criteria->compare('DateUp',$this->DateUp,true);
+		
+		$sort = new CSort();
+		$sort->attributes = array(
+			'Category.Category'=>array(
+				'asc'=>'Category.Category ASC',
+				'desc'=>'Category.Category DESC',
+			),
+			'Department.Department'=>array(
+				'asc'=>'Department.Department ASC',
+				'desc'=>'Department.Department DESC',
+			),
+			'*', // this adds all of the other columns as sortable
+		);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
+			'sort'=>$sort,
 		));
 	}
 

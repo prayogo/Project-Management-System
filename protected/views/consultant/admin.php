@@ -45,19 +45,22 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 	'dataProvider'=>$model->search(),
 	'filter'=>$model,
 	'columns'=>array(
-		'ConsultantId',
+		'Name',
 		'LectureId',
 		'EmployeeId',
-		'Name',
 		'ResidentId',
-		'CategoryId',
-		/*
-		'DepartmentId',
-		'UserIn',
-		'DateIn',
-		'UserUp',
-		'DateUp',
-		*/
+		array(
+			'type'=>'raw',
+            'name'=>'Category.Category',
+            'value'=>'$data->Category->Category',
+			'filter'=> CHtml::activeTextField($model, 'varCategory'),
+		),
+		array(
+			'type'=>'raw',
+            'name'=>'Department.Department',
+            'value'=>'$data->Department->Department',
+			'filter'=> CHtml::activeTextField($model, 'varDepartment'),
+		),
 		array(
 			'class'=>'CButtonColumn',
 		),

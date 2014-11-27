@@ -20,8 +20,14 @@
 	<?php echo $form->errorSummary($model); ?>
 
 	<div class="row">
+		<?php echo $form->labelEx($model,'Name'); ?>
+		<?php echo $form->textField($model,'Name',array('size'=>60,'maxlength'=>250)); ?>
+		<?php echo $form->error($model,'Name'); ?>
+	</div>
+    
+	<div class="row">
 		<?php echo $form->labelEx($model,'LectureId'); ?>
-		<?php echo $form->textField($model,'LectureId',array('size'=>11,'maxlength'=>11)); ?>
+		<?php echo $form->textField($model,'LectureId',array('size'=>15,'maxlength'=>15)); ?>
 		<?php echo $form->error($model,'LectureId'); ?>
 	</div>
 
@@ -32,12 +38,6 @@
 	</div>
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'Name'); ?>
-		<?php echo $form->textField($model,'Name',array('size'=>60,'maxlength'=>250)); ?>
-		<?php echo $form->error($model,'Name'); ?>
-	</div>
-
-	<div class="row">
 		<?php echo $form->labelEx($model,'ResidentId'); ?>
 		<?php echo $form->textField($model,'ResidentId',array('size'=>50,'maxlength'=>50)); ?>
 		<?php echo $form->error($model,'ResidentId'); ?>
@@ -45,13 +45,37 @@
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'CategoryId'); ?>
-		<?php echo $form->textField($model,'CategoryId'); ?>
+		<?php
+			$this->widget('booster.widgets.TbSelect2',
+				array(
+					'model' => $model,
+					'attribute' => 'CategoryId',
+					'data' => CHtml::listData(Category::model()->findAll(), 'CategoryId', 'Category'),
+					'options' => array(
+						'placeholder' => 'Select Category',
+						'width' => '40%',
+					)
+				)
+			);
+		?>
 		<?php echo $form->error($model,'CategoryId'); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'DepartmentId'); ?>
-		<?php echo $form->textField($model,'DepartmentId'); ?>
+        <?php
+			$this->widget('booster.widgets.TbSelect2',
+				array(
+					'model' => $model,
+					'attribute' => 'DepartmentId',
+					'data' => CHtml::listData(Department::model()->findAll(), 'DepartmentId', 'Department'),
+					'options' => array(
+						'placeholder' => 'Select Category',
+						'width' => '40%',
+					)
+				)
+			);
+		?>
 		<?php echo $form->error($model,'DepartmentId'); ?>
 	</div>
 

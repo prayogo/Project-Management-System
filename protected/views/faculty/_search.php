@@ -12,11 +12,6 @@
 )); ?>
 
 	<div class="row">
-		<?php echo $form->label($model,'FacultyId'); ?>
-		<?php echo $form->textField($model,'FacultyId'); ?>
-	</div>
-
-	<div class="row">
 		<?php echo $form->label($model,'Code'); ?>
 		<?php echo $form->textField($model,'Code',array('size'=>50,'maxlength'=>50)); ?>
 	</div>

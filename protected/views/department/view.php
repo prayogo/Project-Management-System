@@ -4,7 +4,7 @@
 
 $this->breadcrumbs=array(
 	'Departments'=>array('index'),
-	$model->DepartmentId,
+	$model->Code,
 );
 
 $this->menu=array(
@@ -16,18 +16,20 @@ $this->menu=array(
 );
 ?>
 
-<h1>View Department #<?php echo $model->DepartmentId; ?></h1>
+<h1>View Department #<?php echo $model->Code; ?></h1>
 
 <?php $this->widget('zii.widgets.CDetailView', array(
 	'data'=>$model,
 	'attributes'=>array(
-		'DepartmentId',
+		'Code',
 		'Department',
-		'FacultyId',
-		'Enable',
-		'UserIn',
-		'DateIn',
-		'UserUp',
-		'DateUp',
+		array(
+            'name'=>'Faculty',
+            'value'=>$model->Faculty->Faculty,
+		),
+		array(
+            'name'=>'varEnable',
+            'value'=>$model->EnableText,
+		),
 	),
 )); ?>

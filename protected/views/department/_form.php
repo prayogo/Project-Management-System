@@ -20,6 +20,12 @@
 	<?php echo $form->errorSummary($model); ?>
 
 	<div class="row">
+		<?php echo $form->labelEx($model,'Code'); ?>
+		<?php echo $form->textField($model,'Code',array('size'=>50,'maxlength'=>50)); ?>
+		<?php echo $form->error($model,'Code'); ?>
+	</div>
+
+	<div class="row">
 		<?php echo $form->labelEx($model,'Department'); ?>
 		<?php echo $form->textField($model,'Department',array('size'=>60,'maxlength'=>250)); ?>
 		<?php echo $form->error($model,'Department'); ?>
@@ -33,7 +39,7 @@
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'Enable'); ?>
-		<?php echo $form->radioButtonList($model,'Enable',array('1'=>'Yes', '2'=>'No'),array('size'=>1,'maxlength'=>1)); ?>
+		<?php echo $form->radioButtonList($model,'Enable',array('1'=>'Yes', '0'=>'No'),array('size'=>1,'maxlength'=>1)); ?>
 		<?php echo $form->error($model,'Enable'); ?>
 	</div>
 
