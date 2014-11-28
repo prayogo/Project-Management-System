@@ -1,6 +1,6 @@
 <?php
 
-class ConsultantController extends Controller
+class BankController extends Controller
 {
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -32,7 +32,7 @@ class ConsultantController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update', 'loadEmailByAjax'),
+				'actions'=>array('create','update'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -62,24 +62,17 @@ class ConsultantController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model=new Consultant;
+		$model=new Bank;
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
-		if(isset($_POST['Consultant']))
-		{	
-			$model->attributes=$_POST['Consultant'];
+
+		if(isset($_POST['Bank']))
+		{
+			$model->attributes=$_POST['Bank'];
 			$model->UserIn = 'prayogo';
-			
-			if (isset($_POST['ConsultantEmail']))
-            {
-                $model->ConsultantEmail = $_POST['ConsultantEmail'];
-            }
-			
-            if ($model->saveWithRelated('ConsultantEmail'))
-                $this->redirect(array('view', 'id' => $model->ConsultantId));
-            else
-                $model->addError('Email', 'Error occured while saving email.');
+			if($model->save())
+				$this->redirect(array('view','id'=>$model->BankId));
 		}
 
 		$this->render('create',array(
@@ -99,19 +92,12 @@ class ConsultantController extends Controller
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['Consultant']))
+		if(isset($_POST['Bank']))
 		{
-			$model->attributes=$_POST['Consultant'];
-			$model->UserIn = 'prayogo';
-			if (isset($_POST['ConsultantEmail']))
-            {
-                $model->ConsultantEmail = $_POST['ConsultantEmail'];
-            }
-            if ($model->saveWithRelated('ConsultantEmail'))
-                $this->redirect(array('view', 'id' => $model->ConsultantId));
-            else
-                $model->addError('Email', 'Error occured while saving email.');
-				
+			$model->attributes=$_POST['Bank'];
+			$model->UserUp = 'prayogo';
+			if($model->save())
+				$this->redirect(array('view','id'=>$model->BankId));
 		}
 
 		$this->render('update',array(
@@ -138,7 +124,7 @@ class ConsultantController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Consultant');
+		$dataProvider=new CActiveDataProvider('Bank');
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));
@@ -149,10 +135,10 @@ class ConsultantController extends Controller
 	 */
 	public function actionAdmin()
 	{
-		$model=new Consultant('search');
+		$model=new Bank('search');
 		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['Consultant']))
-			$model->attributes=$_GET['Consultant'];
+		if(isset($_GET['Bank']))
+			$model->attributes=$_GET['Bank'];
 
 		$this->render('admin',array(
 			'model'=>$model,
@@ -163,12 +149,12 @@ class ConsultantController extends Controller
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
 	 * @param integer $id the ID of the model to be loaded
-	 * @return Consultant the loaded model
+	 * @return Bank the loaded model
 	 * @throws CHttpException
 	 */
 	public function loadModel($id)
 	{
-		$model=Consultant::model()->findByPk($id);
+		$model=Bank::model()->findByPk($id);
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
@@ -176,23 +162,14 @@ class ConsultantController extends Controller
 
 	/**
 	 * Performs the AJAX validation.
-	 * @param Consultant $model the model to be validated
+	 * @param Bank $model the model to be validated
 	 */
 	protected function performAjaxValidation($model)
 	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='consultant-form')
+		if(isset($_POST['ajax']) && $_POST['ajax']==='bank-form')
 		{
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
 	}
-	
-	public function actionLoadEmailByAjax($index)
-    {
-        $model = new ConsultantEmail;
-        $this->renderPartial('email/_form', array(
-            'model' => $model,
-            'index' => $index,
-        ), false, true);
-    }
 }
