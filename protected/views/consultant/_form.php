@@ -79,6 +79,21 @@
 		<?php echo $form->error($model,'DepartmentId'); ?>
 	</div>
 
+	 <?php echo CHtml::link('Add Email', '#', array('id' => 'loadEmailByAjax')); ?>
+		<div id="email">
+			<?php
+			$index = 0;
+			foreach ($model->ConsultantEmail as $id => $child):
+				$this->renderPartial('email/_form', array(
+					'model' => $child,
+					'index' => $id,
+					'display' => 'block'
+				));
+				$index++;
+			endforeach;
+			?>
+		</div>
+
 	<div class="row buttons">
 		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
 	</div>
@@ -86,3 +101,26 @@
 <?php $this->endWidget(); ?>
 
 </div><!-- form -->
+
+<?php
+Yii::app()->clientScript->registerCoreScript('jquery');
+Yii::app()->clientScript->registerScript('loademail', '
+var _index = ' . $index . ';
+$("#loadEmailByAjax").click(function(e){
+    e.preventDefault();
+    var _url = "' . Yii::app()->controller->createUrl("loadEmailByAjax") . '?index="+_index;
+    $.ajax({
+        url: _url,
+        success:function(response){
+            $("#email").append(response);
+            $("#email .crow").last().animate({
+                opacity : 1, 
+                left: "+50", 
+                height: "toggle"
+            });
+        }
+    });
+    _index++;
+});
+', CClientScript::POS_END);
+?>

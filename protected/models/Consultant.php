@@ -19,6 +19,7 @@
  * The followings are the available model relations:
  * @property Ltcategory $category
  * @property Ltdepartment $department
+ * @property Trconsultantemail[] $trconsultantemails
  */
 class Consultant extends CActiveRecord
 {
@@ -69,6 +70,7 @@ class Consultant extends CActiveRecord
 		return array(
 			'Category' => array(self::BELONGS_TO, 'Category', 'CategoryId'),
 			'Department' => array(self::BELONGS_TO, 'Department', 'DepartmentId'),
+			'ConsultantEmail' => array(self::HAS_MANY, 'ConsultantEmail', 'ConsultantId'),
 		);
 	}
 
@@ -157,4 +159,11 @@ class Consultant extends CActiveRecord
 	{
 		return parent::model($className);
 	}
+	
+	public function behaviors()
+    {
+        return array('ESaveRelatedBehavior' => array(
+                'class' => 'application.components.ESaveRelatedBehavior')
+        );
+    }
 }
