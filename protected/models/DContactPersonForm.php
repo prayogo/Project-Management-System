@@ -1,9 +1,9 @@
 <?php
 
 /**
- * This is the model class for table "TrDContactPerson".
+ * This is the model class for table "trdcontactperson".
  *
- * The followings are the available columns in table 'TrDContactPerson':
+ * The followings are the available columns in table 'trdcontactperson':
  * @property integer $DContactPId
  * @property integer $HContactPId
  * @property integer $PhoneTypeId
@@ -12,6 +12,10 @@
  * @property string $DateIn
  * @property string $UserUp
  * @property string $DateUp
+ *
+ * The followings are the available model relations:
+ * @property Trhcontactperson $hContactP
+ * @property Ltphonetype $phoneType
  */
 class DContactPersonForm extends CActiveRecord
 {
@@ -20,7 +24,7 @@ class DContactPersonForm extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'TrDContactPerson';
+		return 'trdcontactperson';
 	}
 
 	/**
@@ -31,14 +35,12 @@ class DContactPersonForm extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('HContactPId, PhoneTypeId, Phone, UserIn, DateIn', 'required'),
+			array('HContactPId, PhoneTypeId, Phone,', 'required'),
 			array('HContactPId, PhoneTypeId', 'numerical', 'integerOnly'=>true),
-			array('Phone', 'length', 'max'=>20),
-			array('UserIn, UserUp', 'length', 'max'=>50),
-			array('DateUp', 'safe'),
+			array('Phone', 'length', 'max'=>20),			
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('DContactPId, HContactPId, PhoneTypeId, Phone, UserIn, DateIn, UserUp, DateUp', 'safe', 'on'=>'search'),
+			array('DContactPId, HContactPId, PhoneTypeId, Phone', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -50,6 +52,8 @@ class DContactPersonForm extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'HContactPerson' => array(self::BELONGS_TO, 'HContactPersonForm', 'HContactPId'),
+			'phoneType' => array(self::BELONGS_TO, 'Ltphonetype', 'PhoneTypeId'),
 		);
 	}
 
@@ -63,10 +67,6 @@ class DContactPersonForm extends CActiveRecord
 			'HContactPId' => 'Hcontact Pid',
 			'PhoneTypeId' => 'Phone Type',
 			'Phone' => 'Phone',
-			'UserIn' => 'User In',
-			'DateIn' => 'Date In',
-			'UserUp' => 'User Up',
-			'DateUp' => 'Date Up',
 		);
 	}
 
@@ -92,10 +92,6 @@ class DContactPersonForm extends CActiveRecord
 		$criteria->compare('HContactPId',$this->HContactPId);
 		$criteria->compare('PhoneTypeId',$this->PhoneTypeId);
 		$criteria->compare('Phone',$this->Phone,true);
-		$criteria->compare('UserIn',$this->UserIn,true);
-		$criteria->compare('DateIn',$this->DateIn,true);
-		$criteria->compare('UserUp',$this->UserUp,true);
-		$criteria->compare('DateUp',$this->DateUp,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

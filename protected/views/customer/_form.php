@@ -173,4 +173,15 @@
         });
     ', CClientScript::POS_END);
     ?>
+
+    function delContact(e){
+        $(e).next().remove();
+        $(e).remove();
+    }
+
+    function delPhone(e){
+        $(e).next().remove();
+        $(e).remove();
+    }
+    
 </script>

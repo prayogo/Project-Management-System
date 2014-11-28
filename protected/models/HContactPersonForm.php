@@ -1,14 +1,18 @@
 <?php
 
 /**
- * This is the model class for table "TrHContactPerson".
+ * This is the model class for table "trhcontactperson".
  *
- * The followings are the available columns in table 'TrHContactPerson':
+ * The followings are the available columns in table 'trhcontactperson':
  * @property integer $HContactPId
  * @property integer $CustomerId
  * @property string $Name
  * @property string $Email
  * @property string $Job
+ *
+ * The followings are the available model relations:
+ * @property Trdcontactperson[] $trdcontactpeople
+ * @property Mscustomer $customer
  */
 class HContactPersonForm extends CActiveRecord
 {
@@ -17,7 +21,7 @@ class HContactPersonForm extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'TrHContactPerson';
+		return 'trhcontactperson';
 	}
 
 	/**
@@ -32,7 +36,7 @@ class HContactPersonForm extends CActiveRecord
 			array('CustomerId', 'numerical', 'integerOnly'=>true),
 			array('Name', 'length', 'max'=>250),
 			array('Email', 'length', 'max'=>100),
-			array('Job', 'length', 'max'=>150),
+			array('Job', 'length', 'max'=>150),			
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('HContactPId, CustomerId, Name, Email, Job', 'safe', 'on'=>'search'),
@@ -47,7 +51,8 @@ class HContactPersonForm extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'Customer' => array(self::BELONGS_TO, 'CustomerForm','CustomerId'),
+			'DContactPerson' => array(self::HAS_MANY, 'DContactPersonForm', 'HContactPId'),
+			'customer' => array(self::BELONGS_TO, 'CustomerForm', 'CustomerId'),
 		);
 	}
 

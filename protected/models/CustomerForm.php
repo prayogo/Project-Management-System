@@ -1,9 +1,9 @@
 <?php
 
 /**
- * This is the model class for table "MsCustomer".
+ * This is the model class for table "mscustomer".
  *
- * The followings are the available columns in table 'MsCustomer':
+ * The followings are the available columns in table 'mscustomer':
  * @property integer $CustomerId
  * @property string $Company
  * @property string $DayOfJoin
@@ -16,6 +16,11 @@
  * @property integer $CompanyTypeId
  * @property integer $CountryId
  * @property string $Webpage
+ *
+ * The followings are the available model relations:
+ * @property Ltcountry $country
+ * @property Ltcompanytype $companyType
+ * @property Trhcontactperson[] $trhcontactpeople
  */
 class CustomerForm extends CActiveRecord
 {
@@ -24,7 +29,7 @@ class CustomerForm extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'MsCustomer';
+		return 'mscustomer';
 	}
 
 	/**
@@ -41,7 +46,7 @@ class CustomerForm extends CActiveRecord
 			array('NPWP', 'length', 'max'=>50),
 			array('Phone, Fax', 'length', 'max'=>20),
 			array('Address, Webpage', 'length', 'max'=>250),
-			array('City, State', 'length', 'max'=>100),			
+			array('City, State', 'length', 'max'=>100),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('CustomerId, Company, DayOfJoin, NPWP, Phone, Fax, Address, City, State, CompanyTypeId, CountryId, Webpage', 'safe', 'on'=>'search'),
@@ -56,7 +61,9 @@ class CustomerForm extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'HContactPerson' => array(self::HAS_MANY,'HContactPersonForm','CustomerId'),
+			'country' => array(self::BELONGS_TO, 'Ltcountry', 'CountryId'),
+			'companyType' => array(self::BELONGS_TO, 'Ltcompanytype', 'CompanyTypeId'),
+			'HContactPerson' => array(self::HAS_MANY, 'HContactPersonForm', 'CustomerId'),
 		);
 	}
 
@@ -127,5 +134,11 @@ class CustomerForm extends CActiveRecord
 	{
 		return parent::model($className);
 	}
-
+	
+	public function behaviors()
+    {
+        return array('ESaveRelatedBehavior' => array(
+                'class' => 'application.components.ESaveRelatedBehavior')
+        );
+    }
 }

@@ -6,7 +6,8 @@ class CustomerController extends Controller
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
 	 * using two-column layout. See 'protected/views/layouts/column2.php'.
 	 */
-	public $layout='//layouts/column2';
+	//public $layout='//layouts/column2';
+	public $layout='//layouts/master';
 
 	/**
 	 * @return array action filters
@@ -77,8 +78,11 @@ class CustomerController extends Controller
 				$model->HContactPerson = $_POST['HContactPersonForm'];
 			}
 
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->CustomerId));
+			if ($model->saveWithRelated('HContactPerson'))
+                $this->redirect(array('view', 'id' => $model->CustomerId));
+            else
+                $model->addError('HContact', 'Error occured while saving Contact Header.');
+
 		}
 
 		$this->render('create',array(
@@ -182,5 +186,11 @@ class CustomerController extends Controller
 	{
 		$model = new HContactPersonForm;
 		$this->renderPartial('contactperson', array('model' => $model, 'index' => $index), false, true);
+	}
+
+	public function actionAddNewPhone($index)
+	{
+		$model = new DContactPersonForm;
+		//$this->renderPartial()
 	}
 }
