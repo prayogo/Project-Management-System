@@ -166,4 +166,23 @@ class Consultant extends CActiveRecord
                 'class' => 'application.components.ESaveRelatedBehavior')
         );
     }
+	
+	public function gridConsultantEmail(){
+		$criteria = new CDbCriteria();
+		$criteria->select = 'Email';
+		$criteria->condition = '`Primary`=1 AND ConsultantId=:ConsultantId';
+		$criteria->params = array(':ConsultantId'=>$this->ConsultantId);
+		$model = ConsultantEmail::model()->findAll($criteria);
+		$emailstr = "";
+		if ($model != NULL){
+			foreach($model as $emails){
+				$emailstr = $emailstr. $emails->Email. ', ';
+			}
+			$emailstr = substr($emailstr, 0, strlen($emailstr) - 2);
+		}else{
+			$emailstr = ' - ';	
+		}
+		
+		return $emailstr;
+	}
 }

@@ -4,29 +4,37 @@
 ?>
 
 <div class="view">
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('Name')); ?>:</b>
+<div class="row">
+	<b><span class="col-md-3"><?php echo CHtml::encode($data->getAttributeLabel('Name')); ?></span>:</b>
 	<?php echo CHtml::link(CHtml::encode($data->Name), array('view', 'id'=>$data->ConsultantId)); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('LectureId')); ?>:</b>
+	<b><span class="col-md-3"><?php echo CHtml::encode($data->getAttributeLabel('LectureId')); ?></span>:</b>
 	<?php echo CHtml::encode($data->LectureId); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('EmployeeId')); ?>:</b>
+	<b><span class="col-md-3"><?php echo CHtml::encode($data->getAttributeLabel('EmployeeId')); ?></span>:</b>
 	<?php echo CHtml::encode($data->EmployeeId); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('ResidentId')); ?>:</b>
+	<b><span class="col-md-3"><?php echo CHtml::encode($data->getAttributeLabel('ResidentId')); ?></span>:</b>
 	<?php echo CHtml::encode($data->ResidentId); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('CategoryId')); ?>:</b>
+	<b><span class="col-md-3"><?php echo CHtml::encode($data->getAttributeLabel('CategoryId')); ?></span>:</b>
 	<?php echo CHtml::encode($data->Category->Category); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('DepartmentId')); ?>:</b>
+	<b><span class="col-md-3"><?php echo CHtml::encode($data->getAttributeLabel('DepartmentId')); ?></span>:</b>
 	<?php echo CHtml::encode($data->Department->Department); ?>
 	<br />
-
+    
+    <b><span class="col-md-3">Email</span>:</b>
+    <?php 
+		$str = $data->gridConsultantEmail();
+		if (strlen($str) > StandardVariable::CONSTANT_VIEW_MAX_LENGTH){
+			$str = substr($str, 0, StandardVariable::CONSTANT_VIEW_MAX_LENGTH - 3) . '...';
+		}
+		echo $str;?>
+</div>
 </div>
