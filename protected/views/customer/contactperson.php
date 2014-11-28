@@ -24,7 +24,9 @@
                 </div>         
             </div>            
             
-            
+            <a style="cursor:pointer;text-decoration:none;" onclick="addPhone(this)"><i class="fi-plus"></i> Add New Phone</a>
+            <div id="contact_person_phone_group">                
+            </div>
             <hr>
         </div>
     </div>    

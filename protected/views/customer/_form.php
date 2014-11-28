@@ -132,6 +132,10 @@
                 'display' => 'block'
             ));
             $index++;
+            $index2 = 0;
+            //foreach($model->HContactPerson->DContactPerson as $id => $DContactPersonForm){
+
+            //}
         endforeach;
     ?>
 	</div>
@@ -166,13 +170,26 @@
                 success:function(response){                    
                     $contact_person_clone =  $(response).find("#contact_person").clone().attr("id", "").attr("style","");
                     $contact_person_clone.appendTo("#contact_person");
-                    console.log($contact_person_clone);
                 }
             });
             _index++;
         });
     ', CClientScript::POS_END);
     ?>
+
+    var _index2 = 0;
+    function addPhone(src){    	
+    	$.ajax({
+    		url : '<?php echo Yii::app()->request->baseUrl?>/customer/AddNewPhone',
+    		data : {'index':_index2},
+    		dataType : 'html',
+    		success : function(response){
+    			console.log($(response));
+    			$phoneclone =  $(response).clone().attr('id', '').attr('style','');
+                $phoneclone.appendTo($(src).next());                
+    		}
+    	});
+    }
 
     function delContact(e){
         $(e).next().remove();
@@ -183,5 +200,5 @@
         $(e).next().remove();
         $(e).remove();
     }
-    
+
 </script>

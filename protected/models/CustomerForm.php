@@ -62,7 +62,7 @@ class CustomerForm extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'country' => array(self::BELONGS_TO, 'Ltcountry', 'CountryId'),
-			'companyType' => array(self::BELONGS_TO, 'Ltcompanytype', 'CompanyTypeId'),
+			'companyType' => array(self::BELONGS_TO, 'CompanyType', 'CompanyTypeId'),
 			'HContactPerson' => array(self::HAS_MANY, 'HContactPersonForm', 'CustomerId'),
 		);
 	}
@@ -134,7 +134,7 @@ class CustomerForm extends CActiveRecord
 	{
 		return parent::model($className);
 	}
-	
+
 	public function behaviors()
     {
         return array('ESaveRelatedBehavior' => array(
