@@ -2,186 +2,185 @@
 
 class CustomerController extends Controller
 {
-	public $layout='//layouts/master';
-	
-	public function actionManagecustomer()
+	/**
+	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
+	 * using two-column layout. See 'protected/views/layouts/column2.php'.
+	 */
+	public $layout='//layouts/column2';
+
+	/**
+	 * @return array action filters
+	 */
+	public function filters()
 	{
-		$activeTab = "customerdetail";				
-		
-		var_dump($_POST);
-		
-		if(isset($_POST['ajax']) && $_POST['ajax']==='customer-form-customerdetail-form')
-		{
-			echo CActiveForm::validate($model_detail);			
-			foreach($list as $model_hcontact){
-				echo CActiveForm::validate($model_hcontact);
-			}
-			echo CActiveForm::validate($model_dcontact);
-			Yii::app()->end();
-		}
-		else {
-			$model_detail = new CustomerForm;
-			$model_hcontact = new HContactPersonForm;
-			$model_dcontact = new DContactPersonForm;		
-		}
-		
-		$list[0] = $model_hcontact;
+		return array(
+			'accessControl', // perform access control for CRUD operations
+			'postOnly + delete', // we only allow deletion via POST request
+		);
+	}
 
-		if(isset($_POST['CustomerForm'])) {
-			$validateCustomer = false;
-			$validateContactHdr = false;
-			$validateContactDtl = false;
- 			
-			if($model_detail->validate()){
-				$validateCustomer = true;
-			}
+	/**
+	 * Specifies the access control rules.
+	 * This method is used by the 'accessControl' filter.
+	 * @return array access control rules
+	 */
+	public function accessRules()
+	{
+		return array(
+			array('allow',  // allow all users to perform 'index' and 'view' actions
+				'actions'=>array('index','view'),
+				'users'=>array('*'),
+			),
+			array('allow', // allow authenticated user to perform 'create' and 'update' actions
+				'actions'=>array('create','update','AddNewContact'),
+				'users'=>array('@'),
+			),
+			array('allow', // allow admin user to perform 'admin' and 'delete' actions
+				'actions'=>array('admin','delete'),
+				'users'=>array('admin'),
+			),
+			array('deny',  // deny all users
+				'users'=>array('*'),
+			),
+		);
+	}
 
-			if($model_hcontact->validate()){
-				$validateContactHdr = true;
-			}
-
-			if($model_dcontact->validate()){
-				$validateContactDtl = true;
-			}
-		}
-
-		$this->render('managecustomer', array(
-			'activeTab'=>$activeTab,
-			'model_detail'=>$model_detail,
-			'list'=>$list
-			//'model_hcontact'=>$model_hcontact, 
-			//'model_dcontact'=>$model_dcontact
+	/**
+	 * Displays a particular model.
+	 * @param integer $id the ID of the model to be displayed
+	 */
+	public function actionView($id)
+	{
+		$this->render('view',array(
+			'model'=>$this->loadModel($id),
 		));
 	}
 
-	public function actionValidateForm(){
+	/**
+	 * Creates a new model.
+	 * If creation is successful, the browser will be redirected to the 'view' page.
+	 */
+	public function actionCreate()
+	{
+		$model=new CustomerForm;
 
-		$model_detail = new CustomerForm;
-		$model_hcontact = new HContactPersonForm;
-		$model_dcontact = new DContactPersonForm;
-		
-		$activeTab = "customerdetail";
-		
-		if(isset($_POST['ajax']) && $_POST['ajax']==='customer-form-customerdetail-form')
+		// Uncomment the following line if AJAX validation is needed
+		$this->performAjaxValidation($model);
+				
+		if(isset($_POST['CustomerForm']))
+		{		
+			
+			$model->attributes=$_POST['CustomerForm'];			
+
+			if(isset($_POST['HContactPersonForm']))
+			{				
+				$model->HContactPerson = $_POST['HContactPersonForm'];
+			}
+
+			if($model->save())
+				$this->redirect(array('view','id'=>$model->CustomerId));
+		}
+
+		$this->render('create',array(
+			'model'=>$model,
+		));
+	}
+
+	/**
+	 * Updates a particular model.
+	 * If update is successful, the browser will be redirected to the 'view' page.
+	 * @param integer $id the ID of the model to be updated
+	 */
+	public function actionUpdate($id)
+	{
+		$model=$this->loadModel($id);
+
+		// Uncomment the following line if AJAX validation is needed
+		// $this->performAjaxValidation($model);
+
+		if(isset($_POST['CustomerForm']))
 		{
-			echo CActiveForm::validate($model_detail);
-			echo CActiveForm::validate($model_hcontact);
-			echo CActiveForm::validate($model_dcontact);
+			$model->attributes=$_POST['CustomerForm'];
+			if($model->save())
+				$this->redirect(array('view','id'=>$model->CustomerId));
+		}
+
+		$this->render('update',array(
+			'model'=>$model,
+		));
+	}
+
+	/**
+	 * Deletes a particular model.
+	 * If deletion is successful, the browser will be redirected to the 'admin' page.
+	 * @param integer $id the ID of the model to be deleted
+	 */
+	public function actionDelete($id)
+	{
+		$this->loadModel($id)->delete();
+
+		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+		if(!isset($_GET['ajax']))
+			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+	}
+
+	/**
+	 * Lists all models.
+	 */
+	public function actionIndex()
+	{
+		$dataProvider=new CActiveDataProvider('CustomerForm');
+		$this->render('index',array(
+			'dataProvider'=>$dataProvider,
+		));
+	}
+
+	/**
+	 * Manages all models.
+	 */
+	public function actionAdmin()
+	{
+		$model=new CustomerForm('search');
+		$model->unsetAttributes();  // clear any default values
+		if(isset($_GET['CustomerForm']))
+			$model->attributes=$_GET['CustomerForm'];
+
+		$this->render('admin',array(
+			'model'=>$model,
+		));
+	}
+
+	/**
+	 * Returns the data model based on the primary key given in the GET variable.
+	 * If the data model is not found, an HTTP exception will be raised.
+	 * @param integer $id the ID of the model to be loaded
+	 * @return CustomerForm the loaded model
+	 * @throws CHttpException
+	 */
+	public function loadModel($id)
+	{
+		$model=CustomerForm::model()->findByPk($id);
+		if($model===null)
+			throw new CHttpException(404,'The requested page does not exist.');
+		return $model;
+	}
+
+	/**
+	 * Performs the AJAX validation.
+	 * @param CustomerForm $model the model to be validated
+	 */
+	protected function performAjaxValidation($model)
+	{		
+		if(isset($_POST['ajax']) && $_POST['ajax']==='customer-form')
+		{
+			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
-
-		$model_detail->attributes=$_POST['CustomerForm'];
-
-		$hcontact = $_POST["HContactPersonForm"];
-		for($i = 0; $i < count($hcontact); $i++){
-			$model_hcontact = new HContactPersonForm;
-			$model_hcontact = $hcontact[$i]["Name"] ;
-		}
-
-		if($model_detail->validate()){
-			$validateCustomer = true;
-		}
-
-		if($model_hcontact->validate()){
-			$validateContactHdr = true;
-		}
-
-		if($model_dcontact->validate()){
-			$validateContactDtl = true;
-		}
-
 	}
 
-	public function actionGetCountryList(){
-		$model=new CustomerForm;
-		$countryList = array();
-		$id = "NULL";
-
-		if (isset($_POST['ajax']) && $_POST['ajax'] != null && $_POST['ajax'] != ""){
-			if (isset($_POST['id']) && $_POST['id'] != null && $_POST['id'] != ""){				
-				$id = $_POST['id'];
-				$countryList = $model->getCountryList($id);
-			}else{
-				$countryList = $model->getCountryList($id);
-				//array_unshift($countryList, array('CountryId'=>'0', 'Country'=>''));
-			}
-		}
-		echo json_encode($countryList);
-	}
-
-	public function actionGetCompanyTypeList(){
-		$model=new CustomerForm;
-		$companyTypeList = array();
-		$id = "NULL";
-
-		if (isset($_POST['ajax']) && $_POST['ajax'] != null && $_POST['ajax'] != ""){
-			if (isset($_POST['id']) && $_POST['id'] != null && $_POST['id'] != ""){				
-				$id = $_POST['id'];
-				$companyTypeList = $model->getCompanyTypeList($id);
-			}else{
-				$companyTypeList = $model->getCompanyTypeList($id);
-				//array_unshift($companyTypeList, array('CompanyTypeId'=>'0', 'CompanyType'=>''));
-			}
-		}
-		echo json_encode($companyTypeList);
-	}
-
-	public function actionGetPhoneTypeList(){
-		$model=new DContactPersonForm;
-		$list = array();
-		$id = "NULL";
-
-		if (isset($_POST['ajax']) && $_POST['ajax'] != null && $_POST['ajax'] != ""){
-			if (isset($_POST['id']) && $_POST['id'] != null && $_POST['id'] != ""){				
-				$id = $_POST['id'];
-				$list = $model->getPhoneTypeList($id);
-			}else{
-				$list = $model->getPhoneTypeList($id);
-				//array_unshift($list, array('PhoneTypeId'=>'0', 'PhoneType'=>''));
-			}
-		}
-		echo json_encode($list);
-	}
-
-	public function actionaddNewForm()
+	public function actionAddNewContact($index)
 	{
-		$model_hcontact = new HContactPersonForm;
-		$model_dcontact = new DContactPersonForm;
-		
-		$this->renderPartial('contactperson',array('model_hcontact'=>$model_hcontact,'model_dcontact'=>$model_dcontact), false, true);
+		$model = new HContactPersonForm;
+		$this->renderPartial('contactperson', array('model' => $model, 'index' => $index), false, true);
 	}
-
-	public function actionaddNewContact($index)
-	{
-		$model_hcontact = new HContactPersonForm;		
-
-		$this->renderPartial('contactperson',array('model_hcontact'=>$model_hcontact,'index'=>$index,'display'=>'block'), false, true);
-	}
-
-	// Uncomment the following methods and override them if needed
-	/*
-	public function filters()
-	{
-		// return the filter configuration for this controller, e.g.:
-		return array(
-			'inlineFilterName',
-			array(
-				'class'=>'path.to.FilterClass',
-				'propertyName'=>'propertyValue',
-			),
-		);
-	}
-
-	public function actions()
-	{
-		// return external action classes, e.g.:
-		return array(
-			'action1'=>'path.to.ActionClass',
-			'action2'=>array(
-				'class'=>'path.to.AnotherActionClass',
-				'propertyName'=>'propertyValue',
-			),
-		);
-	}
-	*/
 }

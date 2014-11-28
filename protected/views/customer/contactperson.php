@@ -5,22 +5,22 @@
         <div id="contact_person_group">
             <div class="form-group" id="contact_person_detail">
                 <div class="col-1"><span class="pull-right"></span>
-                    <?php echo CHtml::activelabelEx($model_hcontact,'['.$index.']Name', array('class'=>'control-label col-lg-1')); ?>
+                    <?php echo CHtml::activelabelEx($model,'['.$index.']Name', array('class'=>'control-label col-lg-1')); ?>
                 </div>
                 <div class="col-lg-3">
-                    <?php echo CHtml::activetextField($model_hcontact,'['.$index.']Name', array('class'=>'form-control')) ;?>            
+                    <?php echo CHtml::activetextField($model,'['.$index.']Name', array('class'=>'form-control')) ;?>            
                 </div>
                 <div class="col-1"><span class="pull-right"></span>
-                    <?php echo CHtml::activelabelEx($model_hcontact,'['.$index.']Email', array('class'=>'control-label col-lg-1')); ?>
+                    <?php echo CHtml::activelabelEx($model,'['.$index.']Email', array('class'=>'control-label col-lg-1')); ?>
                 </div>
                 <div class="col-lg-3">
-                    <?php echo CHtml::activetextField($model_hcontact,'['.$index.']Email', array('class'=>'form-control')) ;?>            
+                    <?php echo CHtml::activetextField($model,'['.$index.']Email', array('class'=>'form-control')) ;?>            
                 </div>
                 <div class="col-1"><span class="pull-right"></span>
-                    <?php echo CHtml::activelabelEx($model_hcontact,'['.$index.']Job', array('class'=>'control-label col-lg-1')); ?>
+                    <?php echo CHtml::activelabelEx($model,'['.$index.']Job', array('class'=>'control-label col-lg-1')); ?>
                 </div>
                 <div class="col-lg-3">
-                    <?php echo CHtml::activetextField($model_hcontact,'['.$index.']Job', array('class'=>'form-control')) ;?>            
+                    <?php echo CHtml::activetextField($model,'['.$index.']Job', array('class'=>'form-control')) ;?>            
                 </div>         
             </div>            
             
