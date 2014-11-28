@@ -15,9 +15,9 @@ $this->breadcrumbs=array(
       'id'=>'customer-form-customerdetail-form',
       'enableClientValidation'=>true,
       'enableAjaxValidation' => true,
-      //'clientOptions'=>array(
-        //'validateOnSubmit'=>true,
-      //),
+      'clientOptions'=>array(
+        'validateOnSubmit'=>true,
+      ),
     )); 
   ?>
 

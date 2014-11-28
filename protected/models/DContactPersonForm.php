@@ -8,10 +8,13 @@
  * @property integer $HContactPId
  * @property integer $PhoneTypeId
  * @property string $Phone
+ * @property string $UserIn
+ * @property string $DateIn
+ * @property string $UserUp
+ * @property string $DateUp
  */
 class DContactPersonForm extends CActiveRecord
 {
-	public $isChange = false;
 	/**
 	 * @return string the associated database table name
 	 */
@@ -28,12 +31,14 @@ class DContactPersonForm extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('HContactPId, PhoneTypeId, Phone', 'required'),
+			array('HContactPId, PhoneTypeId, Phone, UserIn, DateIn', 'required'),
 			array('HContactPId, PhoneTypeId', 'numerical', 'integerOnly'=>true),
 			array('Phone', 'length', 'max'=>20),
+			array('UserIn, UserUp', 'length', 'max'=>50),
+			array('DateUp', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('DContactPId, HContactPId, PhoneTypeId, Phone', 'safe', 'on'=>'search'),
+			array('DContactPId, HContactPId, PhoneTypeId, Phone, UserIn, DateIn, UserUp, DateUp', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -58,6 +63,10 @@ class DContactPersonForm extends CActiveRecord
 			'HContactPId' => 'Hcontact Pid',
 			'PhoneTypeId' => 'Phone Type',
 			'Phone' => 'Phone',
+			'UserIn' => 'User In',
+			'DateIn' => 'Date In',
+			'UserUp' => 'User Up',
+			'DateUp' => 'Date Up',
 		);
 	}
 
@@ -83,6 +92,10 @@ class DContactPersonForm extends CActiveRecord
 		$criteria->compare('HContactPId',$this->HContactPId);
 		$criteria->compare('PhoneTypeId',$this->PhoneTypeId);
 		$criteria->compare('Phone',$this->Phone,true);
+		$criteria->compare('UserIn',$this->UserIn,true);
+		$criteria->compare('DateIn',$this->DateIn,true);
+		$criteria->compare('UserUp',$this->UserUp,true);
+		$criteria->compare('DateUp',$this->DateUp,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -98,31 +111,5 @@ class DContactPersonForm extends CActiveRecord
 	public static function model($className=__CLASS__)
 	{
 		return parent::model($className);
-	}
-
-
-	/**
-	 * Function for get list phone type
-	 * @param PhoneType int
-	*/
-	public function getPhoneTypeList($PhoneTypId){
-		$connection=Yii::app()->db;
-		$connection->active=true;
-	
-		try
-		{ 
-			$sql = "call Spr_Get_PhoneTypeList(".$PhoneTypId.")";
-			$command=$connection->createCommand($sql);
-			$dataReader=$command->query();
-			$rows=$dataReader->readAll();
-			return $rows;
-		}
-		catch(Exception $e)
-		{
-			$response = array('code'=>'', 'exception'=>'');
-			$response['code'] = StandardVariable::CONSTANT_RETUNN_ERROR;
-			$response['exception'] = $e->errorInfo;
-			return $response;
-		}
 	}
 }

@@ -12,7 +12,6 @@
  */
 class HContactPersonForm extends CActiveRecord
 {
-	public $isChange = false;
 	/**
 	 * @return string the associated database table name
 	 */
@@ -48,6 +47,7 @@ class HContactPersonForm extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'Customer' => array(self::BELONGS_TO, 'CustomerForm','CustomerId'),
 		);
 	}
 
@@ -61,7 +61,7 @@ class HContactPersonForm extends CActiveRecord
 			'CustomerId' => 'Customer',
 			'Name' => 'Name',
 			'Email' => 'Email',
-			'Job' => 'Position',
+			'Job' => 'Job',
 		);
 	}
 
@@ -104,5 +104,4 @@ class HContactPersonForm extends CActiveRecord
 	{
 		return parent::model($className);
 	}
-
 }

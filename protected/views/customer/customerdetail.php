@@ -115,18 +115,18 @@
         <hr>            
     </div>
 
-    <a class="" style="cursor:pointer;text-decoration:none;" id="btnAddContact"><i class="fi-plus"></i> Add New Contact Person</a>
+    <a class="" style="cursor:pointer;text-decoration:none;" id="btnAddContact"><i class="fi-plus"></i> Add New Contact Person</a>    
     <?php
         $index = 0;        
-        foreach ($list as $id => $model_hcontact):
+        foreach ($list as $id => $HContactPerson):
             $this->renderPartial('contactperson', array(
-                'model_hcontact' => $model_hcontact,
+                'model_hcontact' => $HContactPerson,
                 'index' => $id,
                 'display' => 'block'
             ));
             $index++;
         endforeach;
-        ?>
+    ?>
 
 <!-- 
     <a class="" style="cursor:pointer;text-decoration:none;" id="btnAddContact"><i class="fi-plus"></i> Add New Contact Person</a>
@@ -137,22 +137,22 @@
             <div id="contact_person_group">
                 <div class="form-group" id="contact_person_detail">
                     <div class="col-1"><span class="pull-right"></span>
-                        <?php echo $form->labelEx($model_hcontact,'Name', array('class'=>'control-label col-lg-1')); ?>
+                        <?php //echo $form->labelEx($model_hcontact,'Name', array('class'=>'control-label col-lg-1')); ?>
                     </div>
                     <div class="col-lg-3">
-                        <?php echo $form->textField($model_hcontact,'Name', array('class'=>'form-control')) ;?>            
+                        <?php //echo $form->textField($model_hcontact,'Name', array('class'=>'form-control')) ;?>            
                     </div>
                     <div class="col-1"><span class="pull-right"></span>
-                        <?php echo $form->labelEx($model_hcontact,'Email', array('class'=>'control-label col-lg-1')); ?>
+                        <?php //echo $form->labelEx($model_hcontact,'Email', array('class'=>'control-label col-lg-1')); ?>
                     </div>
                     <div class="col-lg-3">
-                        <?php echo $form->textField($model_hcontact,'Email', array('class'=>'form-control')) ;?>            
+                        <?php //echo $form->textField($model_hcontact,'Email', array('class'=>'form-control')) ;?>            
                     </div>
                     <div class="col-1"><span class="pull-right"></span>
-                        <?php echo $form->labelEx($model_hcontact,'Job', array('class'=>'control-label col-lg-1')); ?>
+                        <?php// echo $form->labelEx($model_hcontact,'Job', array('class'=>'control-label col-lg-1')); ?>
                     </div>
                     <div class="col-lg-3">
-                        <?php echo $form->textField($model_hcontact,'Job', array('class'=>'form-control')) ;?>            
+                        <?php// echo $form->textField($model_hcontact,'Job', array('class'=>'form-control')) ;?>            
                     </div>         
                 </div>
 
