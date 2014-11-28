@@ -9,5 +9,6 @@ class StandardVariable
 	const CONSTANT_PASSWORD = 'T@#SV^gM@_2Qpge^BppV';
 	const CONSTANT_ENABLE = 'Enable';
 	const CONSTANT_DISABLE = 'Disable';
+	const CONSTANT_VIEW_MAX_LENGTH = 65;
 }
 ?>
