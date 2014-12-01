@@ -34,7 +34,19 @@
                 <?php echo $form->labelEx($model,'CompanyTypeId', array('class'=>'control-label col-lg-2')); ?>
             </div>
             <div class="col-lg-6">
-                <?php echo $form->textField($model,'CompanyTypeId', array('class'=>'form-control CompanyTypeId')) ;?>            
+                <?php
+					$this->widget('booster.widgets.TbSelect2',
+						array(
+							'model' => $model,
+							'attribute' => 'CompanyTypeId',
+							'data' => CHtml::listData(CompanyType::model()->findAll(), 'CompanyTypeId', 'CompanyType'),
+							'options' => array(
+								'placeholder' => 'Select Company Type',
+								'width' => '100%',
+							)
+						)
+					);
+				?>   
             </div>
         </div>
 
@@ -70,7 +82,19 @@
                 <?php echo $form->labelEx($model,'CountryId', array('class'=>'control-label col-lg-2')); ?>
             </div>
             <div class="col-lg-6">
-                <?php echo $form->textField($model,'CountryId', array('class'=>'form-control CountryId')); ?>
+                <?php
+					$this->widget('booster.widgets.TbSelect2',
+						array(
+							'model' => $model,
+							'attribute' => 'CountryId',
+							'data' => CHtml::listData(Country::model()->findAll(), 'CountryId', 'Country'),
+							'options' => array(
+								'placeholder' => 'Select Country',
+								'width' => '100%',
+							)
+						)
+					);
+				?>   
             </div>
         </div>
 

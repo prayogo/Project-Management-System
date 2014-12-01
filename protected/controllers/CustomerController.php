@@ -68,7 +68,6 @@ class CustomerController extends Controller
 		// Uncomment the following line if AJAX validation is needed
 		$this->performAjaxValidation($model);
 				
-				var_dump($_POST);
 		if(isset($_POST['CustomerForm']))
 		{		
 			
@@ -77,6 +76,8 @@ class CustomerController extends Controller
 			if(isset($_POST['HContactPersonForm']))
 			{				
 				$model->HContactPerson = $_POST['HContactPersonForm'];
+				$model_hcontact = $model->HContactPerson;
+				
 				// $model->DContactPerson = $_POST['DContactPersonForm'];
 
 				if ($model->saveWithRelated('HContactPerson'))
